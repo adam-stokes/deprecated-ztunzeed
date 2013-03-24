@@ -21,7 +21,10 @@
 </div>
 <br/>
 <div id="footer">
- <p><b><a href="/">Back to index</a></b></p>
+ <p>
+   <h2><a href="/" class="align-left">&larr;</a></h2>
+   <b><a href="/" class="align-right">Back to index</a></b>
+ </p>
 </div>
 
 </body>

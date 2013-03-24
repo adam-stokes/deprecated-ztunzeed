@@ -55,8 +55,8 @@ p {
 }
 
 code {
-  color: indigo;
-  font-size: 80%;
+  color: #191970;
+  font-size: 75%;
 }
 
 ul {
