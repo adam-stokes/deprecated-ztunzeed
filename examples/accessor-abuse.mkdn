@@ -1,0 +1,55 @@
+Topic: Minimalist accessors via string eval
+Date: 2013-03-24
+
+# Eww, string evals!
+
+String evals might be dirty, but they can be terribly useful. Generating code
+on the fly is how we get many of our big spiffy class builder / class
+introspection bits like [Moo](http://metacpan.org/release/Moo) /
+[Moose](http://metacpan.org/release/Moose).
+
+## Dumb accessors
+
+Take accessors, for example. We could, of course, just create a sub, take
+advantage of lexical capture, and install it as-needed:
+
+    sub attr {
+      my ($class, $attr, %params) = @_;
+      # A read-only accessor:
+      my $accessor = sub {
+        my ($self) = @_;
+        return $self->{$attr} if exists $self->{attr};
+        return unless defined $params{default};
+        ref $params{default} eq 'CODE' ?
+          $params{default}->($self) : $params{default};
+      };
+      no strict 'refs';
+      *{ $class .'::'. $attr } = $accessor;
+    }
+
+... but this accessor is going to be __slow__. We're interpolating
+lexical captures all the way, and checking for a default even though we may
+not have one.
+
+## Generated accessors
+
+Instead, most pure-Perl accessors are generated via a combination of string
+eval and lexical capture. Here's a string eval counterpart to the above:
+
+    sub attr {
+      my ($class, $attr, %params) = @_;
+
+      my $c = "package $class; sub $attr { ";
+      if (defined (my $default = $params{default}) {
+        $c .= "return \$_[0]->{'$attr'} if exists \$_[0]->{'$attr'};";
+        $c .= "return \$_[0]->{'$attr'} = ";
+        $c .= ref $default ? '$default->($_[0]);' : '$default;';
+      }
+      $c .= "\$_[0]->{'$attr'} }";
+
+      no strict 'refs';
+      die "Failed attrib creation for $class ($attr): $@"
+        unless eval "$c; 1";
+    }
+
+Of course, for any real project, you should probably be using __Moo__ ;-)
