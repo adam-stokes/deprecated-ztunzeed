@@ -1,0 +1,14 @@
+<html>
+<head>
+<title>blag: <%= $post->topic %></title>
+</head>
+
+<h2><%= $post->topic %></h2>
+
+<p>Date: <%= $post->date %></p>
+
+<%== $post->html %>
+
+<body>
+</body>
+</html>

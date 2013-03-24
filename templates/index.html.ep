@@ -1,0 +1,21 @@
+<html>
+<head><title>take it to your blag</title></head>
+
+<body>
+
+<h2>take it to your blag</h2>
+
+<ul>
+  % for my $item ($postlist->by_date->all) {
+    % my $post = $item->post;
+    <li>
+      <b><a href="/post/<%= $post->id %>">
+        <%= $post->topic %>
+      </a></b>
+      (posted at <%= %post->date %>)
+    </li>
+  % }
+</ul>
+
+</body>
+</html>

@@ -1,0 +1,206 @@
+#!/usr/bin/env perl
+
+package Blag::Post;
+use strict; use warnings;
+use Carp 'confess';
+use Path::Tiny ();
+use Text::Markdown 'markdown';
+
+# Post format:
+#   Topic: One-liner summary
+#   Date: YYYY-MM-DD
+#   <Single empty line>
+#   <Markdown content>
+
+sub PATH     () { 0 }
+sub TOPIC    () { 1 }
+sub DATE     () { 2 }
+sub BLAGID   () { 3 }
+sub CONTENT  () { 4 }
+
+sub from_file {
+  my ($class, $filepath) = @_;
+  confess "Expected a path" unless defined $filepath;
+
+  my $self = [];
+
+  my $file = Path::Tiny::path($filepath);
+  confess "Nonexistant post path ($filepath) ".$file->absolute
+    unless $file->exists;
+
+  open my $fh, '<', $filepath or confess "open: $!";
+  my @lines = readline($fh);
+  close $fh or warn "close: $!";
+
+  ## FIXME better parser, check for single empty line after header
+  my ($topicline, $dateline, @contents) = @lines;
+
+  warn "Malformed blag post ($filepath) ".$file->absolute
+    unless index($topicline, 'Topic: ') == 0
+    and    index($dateline, 'Date: ')   == 0;
+
+  warn "Empty blag post ($filepath) ".$file->absolute
+    unless @contents;
+
+  my $topic = substr($topicline, 7);
+  my $date  = substr($dateline, 6);
+
+  my ($blagid) = $file->basename =~ /(.+)\.blag$/;
+
+  my $html = markdown(join "\n", @contents,
+    { tab_width => 2, empty_element_suffix => '>', }
+  );
+  
+  bless [
+    $file,             ## PATH    (Path::Tiny obj, stringifies)
+    $topic,            ## TOPIC
+    $date,             ## DATE
+    $blagid,           ## BLAGID
+    $html              ## CONTENT
+  ], $class
+}
+
+sub path  { $_[0]->[PATH]  }
+sub topic { $_[0]->[TOPIC] }
+sub date  { $_[0]->[DATE]  }
+sub id    { $_[0]->[BLAGID] }
+sub html  { $_[0]->[CONTENT] }
+sub lines {
+  my ($self) = @_;
+  @{ $self->[CONTENT] }
+}
+
+
+package Blag::PostList::Element;
+use strict; use warnings;
+use Carp 'confess';
+use Scalar::Util 'blessed';
+
+sub POST  () { 0 }
+sub MTIME () { 1 }
+
+sub new {
+  my ($class, $post) = @_;
+
+  confess "Expected a Blag::Post"
+    unless blessed $post and $post->isa('Blag::Post');
+
+  my $mtime = $post->path->stat->mtime;
+
+  bless [
+    $post,    ## POST   (Blag::Post obj)
+    $mtime,   ## MTIME  (as of when we saw this post)
+  ], $class
+}
+
+sub post  { $_[0]->[POST]  }
+sub mtime { $_[0]->[MTIME] }
+
+
+package Blag::PostList;
+use strict; use warnings;
+use Carp 'confess';
+use List::Objects::WithUtils;
+use Path::Tiny ();
+
+sub PATH     () { 0 }
+sub POSTHASH () { 1 }
+
+sub from_dir {
+  my ($class, $dirpath) = @_;
+
+  my $dir = Path::Tiny::path($dirpath);
+  my $self = [
+    $dir,     ## PATH
+    hash,     ## POSTHASH
+  ];
+  bless $self, $class;
+
+  # Create initial Posts and add hash() of PostList::Elements:
+  $self->scan;
+
+  $self
+}
+
+sub scan {
+  my ($self) = @_;
+  my $dir = $self->path;
+
+  confess "Not a directory: $dir" unless $dir->is_dir;
+
+  SCAN: for my $child ($dir->children) {
+    my $basename = $child->basename;
+    my ($maybe_id) = $basename =~ /(.+)\.blag$/;
+    next SCAN unless $maybe_id;
+
+    if ( $self->posts->exists($maybe_id) ) {
+      next SCAN 
+        if $child->stat->mtime == $self->posts->get($maybe_id)->mtime;
+    }
+
+    my $this_post = Blag::Post->from_file( $child );
+    my $post_meta = Blag::PostList::Element->new( $this_post );  
+
+    $self->posts->set( $maybe_id => $post_meta );
+  }
+
+  $self
+}
+
+sub as_array {
+  $self->posts->values
+}
+
+sub by_date {
+  my ($self) = @_;
+  $self->posts->values
+    ->sort_by(sub { $_->post->date })
+    ->reverse
+}
+
+sub by_mtime {
+  my ($self) = @_;
+  $self->posts->values
+    ->sort_by(sub { $_->mtime })
+}
+
+sub by_topic {
+  my ($self) = @_;
+  $self->posts->values
+    ->sort_by(sub { $_->post->topic })
+}
+
+sub get {
+  my ($self, $id) = @_;
+  $self->posts->get($id)
+}
+
+sub path  { $_[0]->[PATH]  }
+sub posts { $_[0]->[POSTHASH] }
+
+
+package main;
+use strict; use warnings;
+use Mojolicious::Lite;
+
+my $postlist = Blag::PostList->from_dir( 'posts' );
+
+get '/' => sub {
+  my $self = shift;
+  $self->stash( postlist => $postlist->scan );
+  $self->render('index');
+};
+
+get '/post/:id' => sub {
+  my $self = shift;
+
+  my $id   = $self->param('id');
+  my $postobj = $postlist->get($id);
+
+  $self->stash( post => $postobj );
+
+  $self->render('post');
+};
+
+app->start;
+
