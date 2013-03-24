@@ -43,11 +43,13 @@ sub from_file {
     unless @contents;
 
   my $topic = substr($topicline, 7);
+  chomp $topic;
   my $date  = substr($dateline, 6);
+  chomp $date;
 
   my ($blagid) = $file->basename =~ /(.+)\.blag$/;
 
-  my $html = markdown( join("\n", @contents),
+  my $html = markdown( join('', @contents),
     { tab_width => 2, empty_element_suffix => '>', }
   );
   

@@ -8,11 +8,9 @@
 <h2><%= $post->topic %></h2>
 
 <h3>Date: <%= $post->date %></h3>
-<p><a href="/">Index</a></p>
 
 <%== $post->html %>
 
-<br/><br/>
 <p><a href="/">Back to index</a></p>
 
 </body>
