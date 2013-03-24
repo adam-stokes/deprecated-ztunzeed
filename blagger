@@ -1,9 +1,13 @@
 #!/usr/bin/env perl
 
-
-## Configure me -> $ vim blagger.conf
+#########################################
+## -> Install me:
+##
+## Clean me     -> $ rm posts/*.mkdn
+## Config me    -> $ vim blagger.conf
 ## Start me     -> $ hypnotoad blagger
-
+##
+#########################################
 
 use 5.10.1;
 use strict; use warnings;
