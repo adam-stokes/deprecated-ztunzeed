@@ -1,7 +1,7 @@
 <html>
 <head>
- <title><%= $blagcfg->title %></title>
- <link rel="stylesheet"  href="style.css"
+  <title><%= $blagcfg->title %></title>
+  <link rel="stylesheet"  href="/style.css"
        type="text/css" 
        media="screen" 
        title="Style Sheet"
@@ -24,13 +24,15 @@
       </a></b>
       <br/>
       (<i>dated <%= $post->date %>, last edit <%= $item->last_edit %></i>)
-    </li>
+    </li><br/>
   % }
 </ul>
 </div>
 
-<p><i>author: <%= $blagcfg->author %></i> -- 
-<a href="http://www.cobaltirc.org">avenj at cobaltirc.org</a></p>
+<div id="footer">
+  <p><i>author: <%= $blagcfg->author %></i> -- 
+  <a href="http://www.cobaltirc.org">avenj at cobaltirc.org</a></p>
+</div>
 
 </body>
 </html>

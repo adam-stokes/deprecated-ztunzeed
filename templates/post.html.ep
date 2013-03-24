@@ -1,6 +1,11 @@
 <html>
 <head>
-<title>blag: <%= $post->topic %></title>
+  <title>blag: <%= $post->topic %></title>
+  <link rel="stylesheet"  href="/style.css"
+       type="text/css"
+       media="screen"
+       title="Style Sheet"
+  />
 </head>
 
 <body>
@@ -9,9 +14,15 @@
 
 <h3>Date: <%= $post->date %></h3>
 
+<div>
+
 <%== $post->html %>
 
-<p><a href="/">Back to index</a></p>
+</div>
+<br/>
+<div id="footer">
+ <p><b><a href="/">Back to index</a></b></p>
+</div>
 
 </body>
 </html>

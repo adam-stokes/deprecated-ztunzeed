@@ -1,13 +1,13 @@
 body {
   color: #000000;
   background-color: white;
-  margin-left: 5%;
-  margin-right: 5%; 
+  margin-left: 3%;
+  margin-right: 3%; 
 }
 .container {
   background-color: #dcdcdc;
-  padding: 2em; 
-  border: 2px double navy; 
+  padding: 1em; 
+  width: 90%
 }
 
 a {
@@ -35,7 +35,8 @@ a.header:hover {
 }
 
 p {
-  text-indent: 1em;
+  text-indent: -1px;
+  margin-left: 2em;
   margin-top: 0.25em;
   margin-bottom: 0.25em;
 }
