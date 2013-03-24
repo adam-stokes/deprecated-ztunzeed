@@ -54,6 +54,10 @@ p {
   clear: none;
 }
 
+i.postdate {
+  color: darkslategray;
+}
+
 code {
   color: #191970;
   font-size: 75%;

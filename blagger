@@ -24,7 +24,7 @@ BEGIN { local $@; my @failed;
       push @failed, $mod;
     }
   }
-  die "Failed to load modules: ".join ' ', @failed
+  die "Failed to load modules:\n ".join "\n ", @failed
     if @failed;
 };
 
