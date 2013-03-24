@@ -84,22 +84,27 @@ sub from_file {
 
   my @lines = $file->lines_utf8;
 
-  my ($topicline, $dateline, undef, @contents) = @lines;
+  my @header = splice @lines, 0, 2;
+  chomp $lines[0]; if ($lines[0]) {
+    warn "Malformed blog post ($filepath); expected empty line after header"
+  }
+  my (undef, @contents) = @lines;
+
+  chomp @header;
+  my $topicline = (grep {; index($_, 'Topic: ') == 0 } @header)[0];
+  my $dateline  = (grep {; index($_, 'Date: ')  == 0 } @header)[0];
 
   warn "Malformed blag post ($filepath) ".$file->absolute
-    unless index($topicline, 'Topic: ') == 0
-    and    index($dateline, 'Date: ')   == 0;
+    unless $topicline and $dateline;
 
   warn "Empty blag post ($filepath) ".$file->absolute
     unless @contents;
 
   my $topic = substr($topicline, 7);
-  chomp $topic;
   warn "Blag post ($filepath) is missing a Topic:\n"
     unless $topic;
 
   my $date  = substr($dateline, 6);
-  chomp $date;
   warn "Blag post ($filepath) is missing a Date:\n"
     unless $date;
 
