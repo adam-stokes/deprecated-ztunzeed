@@ -2,7 +2,7 @@
 
 ## Fetch me:
 
-    $ git clone git://eris.cobaltirc.org/blagger.git
+    $ git clone git://github.com/avenj/blagger.git
 
 ## Config me:
 
