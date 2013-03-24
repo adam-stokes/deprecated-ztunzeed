@@ -300,7 +300,8 @@ my $blagcfg  = Blag::Meta->new(%$cfghash);
 
 get '/style.css' => sub { 
   my $self = shift;
-  $self->render(template => 'style', format => 'css')
+  my $tmpl = $cfghash->{css_template} || 'style';
+  $self->render(template => $tmpl, format => 'css')
 };
 
 get '/' => sub {
