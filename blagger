@@ -10,6 +10,25 @@ package main; our $VERSION = '0.001001';
 ## See 'examples/' for example posts.
 
 
+{ local $@; my @failed;
+  my @prereq = qw/
+    List::Objects::WithUtils
+    Mojolicious
+    Path::Tiny
+    Text::Markdown
+  /;
+  for my $mod (@prereq) {
+    eval "require $mod; 1";
+    if ($@) {
+      warn $@;
+      push @failed, $mod;
+    }
+  }
+  die "Failed to load modules: ".join ' ', @failed
+    if @failed;
+}
+
+
 package Mojolicious::Command::blag;
 use feature 'say';
 use FindBin '$Bin';
@@ -262,24 +281,6 @@ package main;
 use 5.10.1;
 use strict; use warnings;
 use FindBin '$Bin';
-
-{ local $@; my @failed;
-  my @prereq = qw/
-    List::Objects::WithUtils
-    Mojolicious
-    Path::Tiny
-    Text::Markdown
-  /;
-  for my $mod (@prereq) {
-    eval "require $mod; 1";
-    if ($@) {
-      warn $@;
-      push @failed, $mod;
-    }
-  }
-  die "Failed to load modules: ".join ' ', @failed
-    if @failed;
-}
 
 use Mojolicious::Lite;
 plugin 'Config';
