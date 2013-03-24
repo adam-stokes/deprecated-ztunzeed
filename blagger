@@ -10,7 +10,7 @@ package main; our $VERSION = '0.001001';
 ## See 'examples/' for example posts.
 
 
-{ local $@; my @failed;
+BEGIN { local $@; my @failed;
   my @prereq = qw/
     List::Objects::WithUtils
     Mojolicious
@@ -26,7 +26,7 @@ package main; our $VERSION = '0.001001';
   }
   die "Failed to load modules: ".join ' ', @failed
     if @failed;
-}
+};
 
 
 package Mojolicious::Command::blag;
