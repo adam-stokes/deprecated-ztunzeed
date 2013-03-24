@@ -8,7 +8,7 @@
 
     $ vim blagger.conf
 
-## Start me:
+## Start me or reload on-the-fly:
 
     $ hypnotoad blagger
 
