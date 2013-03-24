@@ -3,9 +3,11 @@
 #########################################
 ## -> Install me:
 ##
-## Clean me     -> $ rm posts/*.mkdn
 ## Config me    -> $ vim blagger.conf
 ## Start me     -> $ hypnotoad blagger
+## Blag stuff   -> $ ./blagger blag this-blag-entry
+##
+## See 'examples/' for example posts.
 ##
 #########################################
 
@@ -63,6 +65,42 @@ get '/post/:id' => sub {
 };
 
 app->start;
+
+
+package Mojolicious::Command::blag;
+use feature 'say';
+use FindBin '$Bin';
+use Mojo::Base 'Mojolicious::Command';
+use Path::Tiny;
+use POSIX ();
+
+has description => "Blag about stuff.\n";
+
+sub run {
+  my ($self, $post) = @_;
+  die "No post ID given" unless $post;
+
+  my $postdir = $self->app->config->{blagcfg}->{post_directory};
+  die "No post_directory configured" unless $postdir;
+  $postdir =~ s/%X/$Bin/g;
+
+  my $file = path($postdir)->child($post.".mkdn");
+  die "Post exists at $file" if $file->exists;
+
+  print "Topic: ";
+  my $topic = <STDIN>; chomp $topic;
+  my $date = POSIX::strftime( "%Y-%m-%d", localtime );  
+
+  my @tmp = (
+    "Topic: $topic\n",
+    "Date: $date\n",
+    "\n\n",
+  );
+
+  $file->spew_utf8(@tmp);
+
+  system($ENV{EDITOR}, "$file");
+}
 
 
 package Blag::Meta;
