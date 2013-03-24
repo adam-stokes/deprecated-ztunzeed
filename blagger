@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-#########################################
+
 ## -> Install me:
 ##
 ## Config me    -> $ vim blagger.conf
@@ -8,63 +8,6 @@
 ## Blag stuff   -> $ ./blagger blag this-blag-entry
 ##
 ## See 'examples/' for example posts.
-##
-#########################################
-
-use 5.10.1;
-use strict; use warnings;
-use FindBin '$Bin';
-
-{ local $@; my @failed;
-  my @prereq = qw/
-    List::Objects::WithUtils
-    Mojolicious
-    Path::Tiny
-    Text::Markdown
-  /;
-  for my $mod (@prereq) {
-    eval "require $mod; 1";
-    if ($@) {
-      warn $@;
-      push @failed, $mod;
-    }
-  }
-}
-
-use Mojolicious::Lite;
-plugin 'Config';
-
-my $cfghash = app->config->{blagcfg} || +{};
-
-my $postdir = $cfghash->{post_directory} || '%X/posts';
-$postdir =~ s/%X/$Bin/g;
-
-my $postlist = Blag::PostList->from_dir( $postdir );
-my $blagcfg  = Blag::Meta->new(%$cfghash);
-
-get '/' => sub {
-  my $self = shift;
-  $self->stash( blagcfg  => $blagcfg );
-  $self->stash( postlist => $postlist->scan );
-  $self->render('index');
-};
-
-get '/post/:id' => sub {
-  my $self = shift;
-
-  my $id   = $self->param('id');
-  my $item = $postlist->get($id);
-  unless ($item) {
-    $self->render( text => 'No such blag!', status => 404 );
-    return
-  }
-
-  $self->stash( post => $item->post );
-  $self->stash( blagcfg => $blagcfg );
-  $self->render('post');
-};
-
-app->start;
 
 
 package Mojolicious::Command::blag;
@@ -312,5 +255,62 @@ sub get {
 
 sub path  { $_[0]->[PATH]  }
 sub posts { $_[0]->[POSTHASH] }
+
+
+package main;
+use 5.10.1;
+use strict; use warnings;
+use FindBin '$Bin';
+
+{ local $@; my @failed;
+  my @prereq = qw/
+    List::Objects::WithUtils
+    Mojolicious
+    Path::Tiny
+    Text::Markdown
+  /;
+  for my $mod (@prereq) {
+    eval "require $mod; 1";
+    if ($@) {
+      warn $@;
+      push @failed, $mod;
+    }
+  }
+}
+
+use Mojolicious::Lite;
+plugin 'Config';
+
+my $cfghash = app->config->{blagcfg} || +{};
+
+my $postdir = $cfghash->{post_directory} || '%X/posts';
+$postdir =~ s/%X/$Bin/g;
+
+my $postlist = Blag::PostList->from_dir( $postdir );
+my $blagcfg  = Blag::Meta->new(%$cfghash);
+
+get '/' => sub {
+  my $self = shift;
+  $self->stash( blagcfg  => $blagcfg );
+  $self->stash( postlist => $postlist->scan );
+  $self->render('index');
+};
+
+get '/post/:id' => sub {
+  my $self = shift;
+
+  my $id   = $self->param('id');
+  my $item = $postlist->get($id);
+  unless ($item) {
+    $self->render( text => 'No such blag!', status => 404 );
+    return
+  }
+
+  $self->stash( post => $item->post );
+  $self->stash( blagcfg => $blagcfg );
+  $self->render('post');
+};
+
+app->start;
 
 
