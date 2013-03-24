@@ -1,5 +1,12 @@
 <html>
-<head><title><%= $blagcfg->title %></title></head>
+<head>
+ <title><%= $blagcfg->title %></title>
+ <link rel="stylesheet"  href="style.css"
+       type="text/css" 
+       media="screen" 
+       title="Style Sheet"
+  />
+</head>
 
 <body>
 
@@ -7,6 +14,7 @@
 
 <p><b>I'm Jon Portnoy; I ramble about Perl stuff.</b></p>
 
+<div>
 <ul>
   % for my $item ($postlist->by_date->all) {
     % my $post = $item->post;
@@ -19,6 +27,7 @@
     </li>
   % }
 </ul>
+</div>
 
 <p><i>author: <%= $blagcfg->author %></i> -- 
 <a href="http://www.cobaltirc.org">avenj at cobaltirc.org</a></p>
