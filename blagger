@@ -57,6 +57,8 @@ sub run {
     "Topic: $topic\n",
     "Date: $date\n",
     "\n\n",
+    "# Gimme some header\n\n",
+    "Hi, put some Markdown here.\n",
   );
 
   $file->spew_utf8(@tmp);
