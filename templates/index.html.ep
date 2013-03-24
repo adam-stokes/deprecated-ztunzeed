@@ -34,7 +34,11 @@
   <p>
     <i>blagged by <%= $blagcfg->author %></i>
     :: <a href="http://www.cobaltirc.org">avenj at cobaltirc.org</a>
-    :: <i>blagger <%= $blagcfg->version %></i>
+    :: <i>
+        <a href="http://bitbucket.org/avenj/blagger">
+          blagger <%= $blagcfg->version %>
+        </a>
+       </i>
   </p>
 </div>
 
