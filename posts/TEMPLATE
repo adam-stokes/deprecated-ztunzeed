@@ -3,7 +3,13 @@ Date: YYYY-MM-DD
 
 # Header.
 
-Some content.
+This is a paragraph.
+It is composed of consecutive lines.
+
+This is a new paragraph.
+
+    Some code.
+    More code.
 
 ## Sub-header.
 

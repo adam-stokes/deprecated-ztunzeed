@@ -22,13 +22,17 @@ use FindBin '$Bin';
 use Mojolicious::Lite;
 plugin 'Config';
 
-my $postdir = app->config->{postdir} || '%X/posts';
+my $cfghash = app->config->{blagcfg} || +{};
+
+my $postdir = $cfghash->{post_directory} || '%X/posts';
 $postdir =~ s/%X/$Bin/g;
 
 my $postlist = Blag::PostList->from_dir( $postdir );
+my $blagcfg  = Blag::Meta->new(%$cfghash);
 
 get '/' => sub {
   my $self = shift;
+  $self->stash( blagcfg  => $blagcfg );
   $self->stash( postlist => $postlist->scan );
   $self->render('index');
 };
@@ -39,16 +43,35 @@ get '/post/:id' => sub {
   my $id   = $self->param('id');
   my $item = $postlist->get($id);
   unless ($item) {
-    $self->render( text => 'No such post', status => 404 );
+    $self->render( text => 'No such blag!', status => 404 );
     return
   }
 
   $self->stash( post => $item->post );
-
+  $self->stash( blagcfg => $blagcfg );
   $self->render('post');
 };
 
 app->start;
+
+
+package Blag::Meta;
+use strict; use warnings;
+use Carp 'confess';
+
+sub TITLE  () { 0 }
+sub AUTHOR () { 1 }
+
+sub new {
+  my ($class, %params) = @_;
+  bless [
+    ($params{title}  || 'my underconfigured blag!'),  # TITLE
+    ($params{author} || 'No One'),                    # AUTHOR
+  ], $class
+}
+
+sub title  { $_[0]->[TITLE]  }
+sub author { $_[0]->[AUTHOR] }
 
 
 package Blag::Post;
