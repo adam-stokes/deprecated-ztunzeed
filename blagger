@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-package main; our $VERSION = '0.001002';
+package main; our $VERSION = '0.001003';
 
 ## -> Install me:
 ##
@@ -106,7 +106,6 @@ sub PATH     () { 0 }
 sub TOPIC    () { 1 }
 sub DATE     () { 2 }
 sub BLAGID   () { 3 }
-sub CONTENT  () { 4 }
 
 sub from_file {
   my ($class, $filepath) = @_;
@@ -120,8 +119,7 @@ sub from_file {
 
   my @lines = $file->lines_utf8;
 
-  ## FIXME better parser, check for single empty line after header
-  my ($topicline, $dateline, @contents) = @lines;
+  my ($topicline, $dateline, undef, @contents) = @lines;
 
   warn "Malformed blag post ($filepath) ".$file->absolute
     unless index($topicline, 'Topic: ') == 0
@@ -132,33 +130,45 @@ sub from_file {
 
   my $topic = substr($topicline, 7);
   chomp $topic;
+  warn "Blag post ($filepath) is missing a Topic:\n"
+    unless $topic;
+
   my $date  = substr($dateline, 6);
   chomp $date;
+  warn "Blag post ($filepath) is missing a Date:\n"
+    unless $date;
 
   my ($blagid) = $file->basename =~ /(.+)\.(?:mkdn|blag)$/;
-
-  my $html = markdown( join('', @contents),
-    { tab_width => 2, empty_element_suffix => '>', }
-  );
   
   bless [
     $file,             ## PATH    (Path::Tiny obj, stringifies)
     $topic,            ## TOPIC
     $date,             ## DATE
     $blagid,           ## BLAGID
-    $html              ## CONTENT
   ], $class
+}
+
+sub html {
+  my ($self) = @_;
+  unless ($self->path->exists) {
+    warn "Nonexistant path at ".$self->path;
+    return '<b>Error; nonexistant path!</b>'
+  }
+
+  my @lines = $self->path->lines_utf8;
+  splice @lines, 0, 3;
+  unless (@lines) {
+    warn "Empty post at ".$self->path;
+    return '<b>Error; empty post!</b>'
+  }
+
+  markdown( join('', @lines), { tab_width => 2 } )
 }
 
 sub path  { $_[0]->[PATH]  }
 sub topic { $_[0]->[TOPIC] }
 sub date  { $_[0]->[DATE]  }
 sub id    { $_[0]->[BLAGID] }
-sub html  { $_[0]->[CONTENT] }
-sub lines {
-  my ($self) = @_;
-  @{ $self->[CONTENT] }
-}
 
 
 package Blag::PostList::Element;
