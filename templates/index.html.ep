@@ -5,6 +5,8 @@
 
 <h2>take it to your blag</h2>
 
+<p>I'm Jon Portnoy; I ramble about Perl stuff.</p>
+
 <ul>
   % for my $item ($postlist->by_date->all) {
     % my $post = $item->post;
