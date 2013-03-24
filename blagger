@@ -73,18 +73,21 @@ use Carp 'confess';
 
 sub TITLE  () { 0 }
 sub AUTHOR () { 1 }
+sub DESC   () { 2 }
 
 sub new {
   my ($class, %params) = @_;
   bless [
     ($params{title}  || 'my underconfigured blag!'),  # TITLE
     ($params{author} || 'No One'),                    # AUTHOR
+    ($params{description} || 'Is this internet?'),
   ], $class
 }
 
-sub title  { $_[0]->[TITLE]  }
-sub author { $_[0]->[AUTHOR] }
+sub author  { $_[0]->[AUTHOR] }
+sub title   { $_[0]->[TITLE]  }
 sub version { $::VERSION }
+sub description { $_[0]->[DESC] }
 
 
 package Blag::Post;
