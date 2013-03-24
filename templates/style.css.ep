@@ -53,8 +53,10 @@ p {
   font-size: 75%;
   clear: none;
 }
-.code {
-  color: blue;
+
+code {
+  color: indigo;
+  font-size: 80%;
 }
 
 ul {
