@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-package main; our $VERSION = '0.001003';
+package main; our $VERSION = '0.001004';
 
 ## -> Install me:
 ##
@@ -29,45 +29,7 @@ BEGIN { local $@; my @failed;
 };
 
 
-package Mojolicious::Command::blag;
-use feature 'say';
-use FindBin '$Bin';
-use Mojo::Base 'Mojolicious::Command';
-use Path::Tiny;
-use POSIX ();
-
-has description => "Blag about stuff.\n";
-
-sub run {
-  my ($self, $post) = @_;
-  die "Usage: blagger blag new-blag-entry-id\n" unless $post;
-
-  my $postdir = $self->app->config->{blagcfg}->{post_directory};
-  die "No post_directory configured\n" unless $postdir;
-  $postdir =~ s/%X/$Bin/g;
-
-  my $file = path($postdir)->child($post.".mkdn");
-  die "Post exists at $file\n" if $file->exists;
-
-  print "Topic: ";
-  my $topic = <STDIN>; chomp $topic;
-  my $date = POSIX::strftime( "%Y-%m-%d", localtime );  
-
-  my @tmp = (
-    "Topic: $topic\n",
-    "Date: $date\n",
-    "\n\n",
-    "# Gimme some header\n\n",
-    "Hi, put some Markdown here.\n",
-  );
-
-  $file->spew_utf8(@tmp);
-
-  system($ENV{EDITOR}, "$file");
-}
-
-
-package Blag::Meta;
+package Blag::Cfg;
 use strict; use warnings;
 use Carp 'confess';
 
@@ -292,6 +254,43 @@ sub path  { $_[0]->[PATH]  }
 sub posts { $_[0]->[POSTHASH] }
 
 
+package Mojolicious::Command::blag;
+use feature 'say';
+use FindBin '$Bin';
+use Mojo::Base 'Mojolicious::Command';
+use Path::Tiny;
+use POSIX ();
+
+has description => "Blag about stuff.\n";
+
+sub run {
+  my ($self, $post) = @_;
+  die "Usage: blagger blag new-blag-entry-id\n" unless $post;
+
+  my $postdir = $self->app->config->{blagcfg}->{post_directory};
+  die "No post_directory configured\n" unless $postdir;
+  $postdir =~ s/%X/$Bin/g;
+
+  my $file = path($postdir)->child($post.".mkdn");
+  die "Post exists at $file\n" if $file->exists;
+
+  print "Topic: ";
+  my $topic = <STDIN>; chomp $topic;
+  my $date = POSIX::strftime( "%Y-%m-%d", localtime );  
+
+  my @tmp = (
+    "Topic: $topic\n",
+    "Date: $date\n",
+    "\n\n",
+    "# Gimme some header\n\n",
+    "Hi, put some Markdown here.\n",
+  );
+
+  $file->spew_utf8(@tmp);
+
+  system($ENV{EDITOR}, "$file");
+}
+
 package main;
 use 5.10.1;
 use strict; use warnings;
@@ -306,7 +305,7 @@ my $postdir = $cfghash->{post_directory} || '%X/posts';
 $postdir =~ s/%X/$Bin/g;
 
 my $postlist = Blag::PostList->from_dir( $postdir );
-my $blagcfg  = Blag::Meta->new(%$cfghash);
+my $blagcfg  = Blag::Cfg->new(%$cfghash);
 
 get '/style.css' => sub { 
   my $self = shift;
