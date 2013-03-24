@@ -12,7 +12,7 @@
       <b><a href="/post/<%= $post->id %>">
         <%= $post->topic %>
       </a></b>
-      (posted at <%= %post->date %>)
+      (posted at <%= $post->date %>)
     </li>
   % }
 </ul>

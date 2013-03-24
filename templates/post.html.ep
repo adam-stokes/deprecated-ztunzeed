@@ -3,12 +3,17 @@
 <title>blag: <%= $post->topic %></title>
 </head>
 
+<body>
+
 <h2><%= $post->topic %></h2>
 
-<p>Date: <%= $post->date %></p>
+<h3>Date: <%= $post->date %></h3>
+<p><a href="/">Index</a></p>
 
 <%== $post->html %>
 
-<body>
+<br/><br/>
+<p><a href="/">Back to index</a></p>
+
 </body>
 </html>

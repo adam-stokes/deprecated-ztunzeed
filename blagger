@@ -47,7 +47,7 @@ sub from_file {
 
   my ($blagid) = $file->basename =~ /(.+)\.blag$/;
 
-  my $html = markdown(join "\n", @contents,
+  my $html = markdown( join("\n", @contents),
     { tab_width => 2, empty_element_suffix => '>', }
   );
   
@@ -148,6 +148,7 @@ sub scan {
 }
 
 sub as_array {
+  my ($self) = @_;
   $self->posts->values
 }
 
@@ -195,9 +196,13 @@ get '/post/:id' => sub {
   my $self = shift;
 
   my $id   = $self->param('id');
-  my $postobj = $postlist->get($id);
+  my $item = $postlist->get($id);
+  unless ($item) {
+    $self->render( text => 'No such post', status => 404 );
+    return
+  }
 
-  $self->stash( post => $postobj );
+  $self->stash( post => $item->post );
 
   $self->render('post');
 };
