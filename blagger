@@ -302,9 +302,12 @@ get '/style.css' => sub {
 
 get '/' => sub {
   my $self = shift;
+
   $self->stash( blagcfg  => $blagcfg );
   $self->stash( postlist => $postlist->scan );
-  $self->render('index');
+
+  my $tmpl = $cfghash->{index_template} || 'index';
+  $self->render($tmpl);
 };
 
 get '/post/:id' => sub {
@@ -319,7 +322,9 @@ get '/post/:id' => sub {
 
   $self->stash( post => $item->post );
   $self->stash( blagcfg => $blagcfg );
-  $self->render('post');
+
+  my $tmpl = $cfghash->{post_template} || 'post';
+  $self->render($tmpl);
 };
 
 app->start;
