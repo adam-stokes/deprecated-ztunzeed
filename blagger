@@ -277,6 +277,8 @@ use FindBin '$Bin';
       push @failed, $mod;
     }
   }
+  die "Failed to load modules: ".join ' ', @failed
+    if @failed;
 }
 
 use Mojolicious::Lite;
