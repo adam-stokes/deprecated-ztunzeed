@@ -1,4 +1,10 @@
 #!/usr/bin/env perl
+
+
+## Configure me -> $ vim blagger.conf
+## Start me     -> $ hypnotoad blagger
+
+
 use 5.10.1;
 use strict; use warnings;
 use FindBin '$Bin';
@@ -219,6 +225,7 @@ sub scan {
       my $current = $self->posts->get($maybe_id);
       unless ($current->post->path->basename eq $child->basename) {
         warn "Possible ID conflict for $maybe_id"
+          if $current->post->path->exists;
       }
       next SCAN if $child->stat->mtime == $current->mtime;
     }
