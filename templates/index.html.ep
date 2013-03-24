@@ -5,7 +5,7 @@
 
 <h2>take it to your blag</h2>
 
-<p>I'm Jon Portnoy; I ramble about Perl stuff.</p>
+<p><b>I'm Jon Portnoy; I ramble about Perl stuff.</b></p>
 
 <ul>
   % for my $item ($postlist->by_date->all) {
@@ -14,10 +14,13 @@
       <b><a href="/post/<%= $post->id %>">
         <%= $post->topic %>
       </a></b>
-      (posted at <%= $post->date %>)
+      <br/>
+      (<i><%= $post->date %>, last edit <%= $item->last_edit %></i>)
     </li>
   % }
 </ul>
+
+<p><a href="http://www.cobaltirc.org>avenj at cobaltirc.org</a></p>
 
 </body>
 </html>

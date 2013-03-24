@@ -1,4 +1,55 @@
 #!/usr/bin/env perl
+use 5.10.1;
+use strict; use warnings;
+use FindBin '$Bin';
+
+{ local $@; my @failed;
+  my @prereq = qw/
+    List::Objects::WithUtils
+    Mojolicious
+    Path::Tiny
+    Text::Markdown
+  /;
+  for my $mod (@prereq) {
+    eval "require $mod; 1";
+    if ($@) {
+      warn $@;
+      push @failed, $mod;
+    }
+  }
+}
+
+use Mojolicious::Lite;
+plugin 'Config';
+
+my $postdir = app->config->{postdir} || '%X/posts';
+$postdir =~ s/%X/$Bin/g;
+
+my $postlist = Blag::PostList->from_dir( $postdir );
+
+get '/' => sub {
+  my $self = shift;
+  $self->stash( postlist => $postlist->scan );
+  $self->render('index');
+};
+
+get '/post/:id' => sub {
+  my $self = shift;
+
+  my $id   = $self->param('id');
+  my $item = $postlist->get($id);
+  unless ($item) {
+    $self->render( text => 'No such post', status => 404 );
+    return
+  }
+
+  $self->stash( post => $item->post );
+
+  $self->render('post');
+};
+
+app->start;
+
 
 package Blag::Post;
 use strict; use warnings;
@@ -28,9 +79,7 @@ sub from_file {
   confess "Nonexistant post path ($filepath) ".$file->absolute
     unless $file->exists;
 
-  open my $fh, '<', $filepath or confess "open: $!";
-  my @lines = readline($fh);
-  close $fh or warn "close: $!";
+  my @lines = $file->lines_utf8;
 
   ## FIXME better parser, check for single empty line after header
   my ($topicline, $dateline, @contents) = @lines;
@@ -47,7 +96,7 @@ sub from_file {
   my $date  = substr($dateline, 6);
   chomp $date;
 
-  my ($blagid) = $file->basename =~ /(.+)\.blag$/;
+  my ($blagid) = $file->basename =~ /(.+)\.(?:mkdn|blag)$/;
 
   my $html = markdown( join('', @contents),
     { tab_width => 2, empty_element_suffix => '>', }
@@ -77,9 +126,11 @@ package Blag::PostList::Element;
 use strict; use warnings;
 use Carp 'confess';
 use Scalar::Util 'blessed';
+use POSIX ();
 
-sub POST  () { 0 }
-sub MTIME () { 1 }
+sub POST      () { 0 }
+sub MTIME     () { 1 }
+sub LAST_EDIT () { 2 }
 
 sub new {
   my ($class, $post) = @_;
@@ -88,15 +139,21 @@ sub new {
     unless blessed $post and $post->isa('Blag::Post');
 
   my $mtime = $post->path->stat->mtime;
+  my $mtime_human = POSIX::strftime(
+    "%Y-%m-%d %H:%M:%S",
+    localtime($mtime)
+  );
 
   bless [
-    $post,    ## POST   (Blag::Post obj)
-    $mtime,   ## MTIME  (as of when we saw this post)
+    $post,         ## POST   (Blag::Post obj)
+    $mtime,        ## MTIME  (as of when we saw this post)
+    $mtime_human,  ## LAST_EDIT
   ], $class
 }
 
-sub post  { $_[0]->[POST]  }
-sub mtime { $_[0]->[MTIME] }
+sub post      { $_[0]->[POST]  }
+sub mtime     { $_[0]->[MTIME] }
+sub last_edit { $_[0]->[LAST_EDIT] }
 
 
 package Blag::PostList;
@@ -132,12 +189,15 @@ sub scan {
 
   SCAN: for my $child ($dir->children) {
     my $basename = $child->basename;
-    my ($maybe_id) = $basename =~ /(.+)\.blag$/;
+    my ($maybe_id) = $basename =~ /(.+)\.(?:mkdn|blag)$/;
     next SCAN unless $maybe_id;
 
     if ( $self->posts->exists($maybe_id) ) {
-      next SCAN 
-        if $child->stat->mtime == $self->posts->get($maybe_id)->mtime;
+      my $current = $self->posts->get($maybe_id);
+      unless ($current->post->path->basename eq $child->basename) {
+        warn "Possible ID conflict for $maybe_id"
+      }
+      next SCAN if $child->stat->mtime == $current->mtime;
     }
 
     my $this_post = Blag::Post->from_file( $child );
@@ -181,33 +241,4 @@ sub get {
 sub path  { $_[0]->[PATH]  }
 sub posts { $_[0]->[POSTHASH] }
 
-
-package main;
-use strict; use warnings;
-use Mojolicious::Lite;
-
-my $postlist = Blag::PostList->from_dir( 'posts' );
-
-get '/' => sub {
-  my $self = shift;
-  $self->stash( postlist => $postlist->scan );
-  $self->render('index');
-};
-
-get '/post/:id' => sub {
-  my $self = shift;
-
-  my $id   = $self->param('id');
-  my $item = $postlist->get($id);
-  unless ($item) {
-    $self->render( text => 'No such post', status => 404 );
-    return
-  }
-
-  $self->stash( post => $item->post );
-
-  $self->render('post');
-};
-
-app->start;
 
