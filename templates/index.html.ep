@@ -12,7 +12,7 @@
 
 <h2><%= $blagcfg->title %></h2>
 
-<p><b>I'm Jon Portnoy; I ramble about Perl stuff.</b></p>
+<p><h4>I'm Jon Portnoy; I ramble about Perl stuff.</h4></p>
 
 <div>
 <ul>

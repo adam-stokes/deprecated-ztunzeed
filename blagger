@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-package main; our $VERSION = '0.001001';
+package main; our $VERSION = '0.001002';
 
 ## -> Install me:
 ##
@@ -40,14 +40,14 @@ has description => "Blag about stuff.\n";
 
 sub run {
   my ($self, $post) = @_;
-  die "No post ID given" unless $post;
+  die "Usage: blagger blag new-blag-entry-id\n" unless $post;
 
   my $postdir = $self->app->config->{blagcfg}->{post_directory};
-  die "No post_directory configured" unless $postdir;
+  die "No post_directory configured\n" unless $postdir;
   $postdir =~ s/%X/$Bin/g;
 
   my $file = path($postdir)->child($post.".mkdn");
-  die "Post exists at $file" if $file->exists;
+  die "Post exists at $file\n" if $file->exists;
 
   print "Topic: ";
   my $topic = <STDIN>; chomp $topic;

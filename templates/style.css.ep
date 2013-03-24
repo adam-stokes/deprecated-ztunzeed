@@ -26,8 +26,10 @@ a:active {
   text-decoration: none;
 }
 
-h1        { color: black; }
-h4.header { color: black; }
+h1        { color: teal; }
+h2        { color: teal; }
+h3        { color: teal; }
+h4        { color: navy; }
 a.header  { color: navy; }
 a.header:hover {
   color: black;
