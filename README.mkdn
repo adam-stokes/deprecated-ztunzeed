@@ -1,0 +1,26 @@
+# blagger
+
+## Fetch me:
+
+    $ git pull git://eris.cobaltirc.org/blagger.git
+
+## Config me:
+
+    $ vim blagger.conf
+
+## Start me:
+
+    $ hypnotoad blagger
+
+## Blag stuff using Markdown:
+
+    $ ./blagger blag this-new-entry
+
+See _examples/_ for example posts.
+
+# author
+
+Jon Portnoy [avenj at cobaltirc.org](http://www.cobaltirc.org)
+
+# license
+Licensed under the same terms as Perl.

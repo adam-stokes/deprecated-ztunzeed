@@ -23,7 +23,8 @@
         <%= $post->topic %>
       </a></b>
       <br/>
-      (<i>dated <%= $post->date %>, last edit <%= $item->last_edit %></i>)
+      (<i class="postdate">dated <%= $post->date %>, 
+       last edit <%= $item->last_edit %></i>)
     </li><br/>
   % }
 </ul>
