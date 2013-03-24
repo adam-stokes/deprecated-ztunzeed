@@ -32,7 +32,7 @@
 
 <div id="footer">
   <p>
-    <i>blagged by <%= $blagcfg->author %></i>
+    <i><%= $blagcfg->author %></i>
     :: <a href="http://www.cobaltirc.org">avenj at cobaltirc.org</a>
     :: <i>
         <a href="http://bitbucket.org/avenj/blagger">
