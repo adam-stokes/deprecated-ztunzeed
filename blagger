@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-
+package main; our $VERSION = '0.001001';
 
 ## -> Install me:
 ##
@@ -63,6 +63,7 @@ sub new {
 
 sub title  { $_[0]->[TITLE]  }
 sub author { $_[0]->[AUTHOR] }
+sub version { $::VERSION }
 
 
 package Blag::Post;

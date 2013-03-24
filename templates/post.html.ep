@@ -12,11 +12,14 @@
 
 <h2><%= $post->topic %></h2>
 
-<h3>Date: <%= $post->date %></h3>
+<h3>
+  Date: <%= $post->date %>
+  <a href="/" class="align-right">&larr; index</a>
+</h3>
 
 <div>
 
-<%== $post->html %>
+ <%== $post->html %>
 
 </div>
 <br/>

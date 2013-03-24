@@ -30,8 +30,11 @@
 </div>
 
 <div id="footer">
-  <p><i>author: <%= $blagcfg->author %></i> -- 
-  <a href="http://www.cobaltirc.org">avenj at cobaltirc.org</a></p>
+  <p>
+    <i>blagged by <%= $blagcfg->author %></i>
+    :: <a href="http://www.cobaltirc.org">avenj at cobaltirc.org</a>
+    :: <i>blagger <%= $blagcfg->version %></i>
+  </p>
 </div>
 
 </body>
