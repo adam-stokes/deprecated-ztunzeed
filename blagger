@@ -84,6 +84,10 @@ sub from_file {
 
   my @lines = $file->lines_utf8;
 
+  ## FIXME to use items_before the first empty-after-chomp element
+  ##  shove in a parser sub, we need to fix ->html() also
+  ##  add a Cache and CacheItems while we're there
+  ##  cache mkdn to disk, check mtimes, serve from cache if they match
   my @header = splice @lines, 0, 2;
   chomp $lines[0]; if ($lines[0]) {
     warn "Malformed blog post ($filepath); expected empty line after header"
@@ -288,15 +292,20 @@ sub run {
 
   my @tmp = (
     "Topic: $topic\n",
-    "Date: $date\n",
-    "\n\n",
-    "# Gimme some header\n\n",
+    "Date: $date\n\n",
+    "## Gimme some header\n\n",
     "Hi, put some Markdown here.\n",
   );
 
   $file->spew_utf8(@tmp);
 
   system($ENV{EDITOR}, "$file");
+
+  ## FIXME
+  ##  Create a pendingposts dir
+  ##  Disallow creation if exists in current or pending
+  ##  Prompt after save wrt whether to pull out of pending
+  ##  Provide a 'reblag' editor command?
 }
 
 package main;
