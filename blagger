@@ -58,6 +58,7 @@ sub description { $_[0]->[DESC] }
 package Blag::Post;
 use strict; use warnings;
 use Carp 'confess';
+use List::Objects::WithUtils;
 use Path::Tiny ();
 use Text::Markdown 'markdown';
 
@@ -71,6 +72,46 @@ sub PATH     () { 0 }
 sub TOPIC    () { 1 }
 sub DATE     () { 2 }
 sub BLAGID   () { 3 }
+sub HTML     () { 4 }
+
+sub _parseblag {
+  my ($path) = @_;
+  confess "Expected a Path::Tiny object"
+    unless ref $path and $path->can('lines_utf8');
+
+  my @lines = $path->lines_utf8;
+  my $full = array(@lines);
+  my $header   = $full->items_before(sub { $_ eq "\n" });
+  my $contents = $full->items_after(sub { $_ eq "\n" });
+
+  my $topicline = 
+    $header->grep(sub { index($_[0], 'Topic: ') == 0 })->get(0);
+  my $dateline =
+    $header->grep(sub { index($_[0], 'Date: ') == 0 })->get(0);
+
+  warn "Malformed blag post at ".$path->absolute
+    unless $topicline and $dateline;
+  warn "Empty blag post at ".$path->absolute
+    unless $contents->count;
+
+  my $topic = substr($topicline, 7);
+  warn "Blag post at @{[$path->absolute]} is missing a Topic:\n"
+    unless $topic;
+  my $date = substr($dateline, 6);
+  warn "Blag post at @{[$path->absolute]} is missing a Date:\n"
+    unless $date;
+
+  hash(
+    topic => $topic,
+    date  => $date,
+    contents => $contents,
+  )
+}
+
+sub _renderblag {
+  my ($contents) = @_;
+  markdown( join('', @$contents), { tab_width => 2 } )
+}
 
 sub from_file {
   my ($class, $filepath) = @_;
@@ -82,35 +123,12 @@ sub from_file {
   confess "Nonexistant post path ($filepath) ".$file->absolute
     unless $file->exists;
 
-  my @lines = $file->lines_utf8;
+  my $item = _parseblag($file);
+  my $topic = $item->get('topic');
+  my $date  = $item->get('date');
 
-  ## FIXME to use items_before the first empty-after-chomp element
-  ##  shove in a parser sub, we need to fix ->html() also
-  ##  add a Cache and CacheItems while we're there
-  ##  cache mkdn to disk, check mtimes, serve from cache if they match
-  my @header = splice @lines, 0, 2;
-  chomp $lines[0]; if ($lines[0]) {
-    warn "Malformed blog post ($filepath); expected empty line after header"
-  }
-  my (undef, @contents) = @lines;
-
-  chomp @header;
-  my $topicline = (grep {; index($_, 'Topic: ') == 0 } @header)[0];
-  my $dateline  = (grep {; index($_, 'Date: ')  == 0 } @header)[0];
-
-  warn "Malformed blag post ($filepath) ".$file->absolute
-    unless $topicline and $dateline;
-
-  warn "Empty blag post ($filepath) ".$file->absolute
-    unless @contents;
-
-  my $topic = substr($topicline, 7);
-  warn "Blag post ($filepath) is missing a Topic:\n"
-    unless $topic;
-
-  my $date  = substr($dateline, 6);
-  warn "Blag post ($filepath) is missing a Date:\n"
-    unless $date;
+  my $contents = $item->get('contents');
+  my $html = _renderblag($contents);
 
   my ($blagid) = $file->basename =~ /(.+)\.(?:mkdn|blag)$/;
   
@@ -119,26 +137,11 @@ sub from_file {
     $topic,            ## TOPIC
     $date,             ## DATE
     $blagid,           ## BLAGID
+    $html,             ## HTML
   ], $class
 }
 
-sub html {
-  my ($self) = @_;
-  unless ($self->path->exists) {
-    warn "Nonexistant path at ".$self->path;
-    return '<b>Error; nonexistant path!</b>'
-  }
-
-  my @lines = $self->path->lines_utf8;
-  splice @lines, 0, 3;
-  unless (@lines) {
-    warn "Empty post at ".$self->path;
-    return '<b>Error; empty post!</b>'
-  }
-
-  markdown( join('', @lines), { tab_width => 2 } )
-}
-
+sub html  { $_[0]->[HTML]  }
 sub path  { $_[0]->[PATH]  }
 sub topic { $_[0]->[TOPIC] }
 sub date  { $_[0]->[DATE]  }
@@ -224,13 +227,18 @@ sub scan {
       next SCAN if $child->stat->mtime == $current->mtime;
     }
 
-    my $this_post = Blag::Post->from_file( $child );
-    my $post_meta = Blag::PostList::Element->new( $this_post );  
-
-    $self->posts->set( $maybe_id => $post_meta );
+    $self->_reset_post( $maybe_id => $child );
   }
 
   $self
+}
+
+sub _reset_post {
+  my ($self, $id, $path) = @_;
+  my $post = Blag::Post->from_file( $path );
+  my $post_meta = Blag::PostList::Element->new( $post );
+  $self->posts->set( $id => $post_meta );
+  $post_meta
 }
 
 sub as_array {
@@ -259,7 +267,13 @@ sub by_topic {
 
 sub get {
   my ($self, $id) = @_;
-  $self->posts->get($id)
+  my $post_meta = $self->posts->get($id);
+  my $old_mtime = $post_meta->mtime;
+  my $cur_mtime = $post_meta->post->path->stat->mtime;
+  unless ($old_mtime == $cur_mtime) {
+    $post_meta = $self->_reset_post( $id => $post_meta->post->path )
+  }
+  $post_meta
 }
 
 sub path  { $_[0]->[PATH]  }
@@ -344,13 +358,13 @@ get '/post/:id' => sub {
   my $self = shift;
 
   my $id   = $self->param('id');
-  my $item = $postlist->get($id);
-  unless ($item) {
+  my $post_meta = $postlist->get($id);
+  unless ($post_meta) {
     $self->render( text => 'No such blag!', status => 404 );
     return
   }
 
-  $self->stash( post => $item->post );
+  $self->stash( post => $post_meta->post );
   $self->stash( blagcfg => $blagcfg );
 
   my $tmpl = $cfghash->{post_template} || 'post';

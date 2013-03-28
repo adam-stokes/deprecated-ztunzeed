@@ -62,7 +62,7 @@ i.postdate {
 
 code {
   color: #191970;
-  font-size: 75%;
+  font-size: 70%;
 }
 
 ul {
