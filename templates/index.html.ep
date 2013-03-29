@@ -16,15 +16,14 @@
 
 <div>
 <ul>
-  % for my $item ($postlist->by_date->all) {
-    % my $post = $item->post;
+  % for my $post ($postlist->by_date->all) {
     <li>
       <b><a href="/post/<%= $post->id %>">
         <%= $post->topic %>
       </a></b>
       <br/>
       (<i class="postdate">dated <%= $post->date %>, 
-       last edit <%= $item->last_edit %></i>)
+       last edit <%= $post->last_edit %></i>)
     </li><br/>
   % }
 </ul>

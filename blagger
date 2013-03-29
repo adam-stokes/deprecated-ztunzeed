@@ -68,12 +68,6 @@ use Text::Markdown 'markdown';
 #   <Single empty line>
 #   <Markdown content>
 
-sub PATH     () { 0 }
-sub TOPIC    () { 1 }
-sub DATE     () { 2 }
-sub BLAGID   () { 3 }
-sub HTML     () { 4 }
-
 sub _parseblag {
   my ($path) = @_;
   confess "Expected a Path::Tiny object"
@@ -108,6 +102,20 @@ sub _parseblag {
   )
 }
 
+sub PATH     () { 0 }
+sub TOPIC    () { 1 }
+sub DATE     () { 2 }
+sub BLAGID   () { 3 }
+sub HTML     () { 4 }
+sub MTIME    () { 5 }
+
+sub html  { $_[0]->[HTML]  }
+sub path  { $_[0]->[PATH]  }
+sub topic { $_[0]->[TOPIC] }
+sub date  { $_[0]->[DATE]  }
+sub id    { $_[0]->[BLAGID] }
+sub mtime { $_[0]->[MTIME] }
+
 sub _renderblag {
   my ($contents) = @_;
   markdown( join('', @$contents), { tab_width => 2 } )
@@ -131,6 +139,8 @@ sub from_file {
   my $html = _renderblag($contents);
 
   my ($blagid) = $file->basename =~ /(.+)\.(?:mkdn|blag)$/;
+
+  my $mtime = $file->stat->mtime;
   
   bless [
     $file,             ## PATH    (Path::Tiny obj, stringifies)
@@ -138,48 +148,16 @@ sub from_file {
     $date,             ## DATE
     $blagid,           ## BLAGID
     $html,             ## HTML
+    $mtime,            ## MTIME
   ], $class
 }
 
-sub html  { $_[0]->[HTML]  }
-sub path  { $_[0]->[PATH]  }
-sub topic { $_[0]->[TOPIC] }
-sub date  { $_[0]->[DATE]  }
-sub id    { $_[0]->[BLAGID] }
-
-
-package Blag::PostList::Element;
-use strict; use warnings;
-use Carp 'confess';
-use Scalar::Util 'blessed';
-use POSIX ();
-
-sub POST      () { 0 }
-sub MTIME     () { 1 }
-sub LAST_EDIT () { 2 }
-
-sub new {
-  my ($class, $post) = @_;
-
-  confess "Expected a Blag::Post"
-    unless blessed $post and $post->isa('Blag::Post');
-
-  my $mtime = $post->path->stat->mtime;
-  my $mtime_human = POSIX::strftime(
-    "%Y-%m-%d %H:%M:%S",
-    localtime($mtime)
-  );
-
-  bless [
-    $post,         ## POST   (Blag::Post obj)
-    $mtime,        ## MTIME  (as of when we saw this post)
-    $mtime_human,  ## LAST_EDIT
-  ], $class
+sub last_edit { 
+  my ($self) = @_;
+  POSIX::strftime("%Y-%m-%d %H:%M:%S",
+    localtime( $self->mtime )
+  )
 }
-
-sub post      { $_[0]->[POST]  }
-sub mtime     { $_[0]->[MTIME] }
-sub last_edit { $_[0]->[LAST_EDIT] }
 
 
 package Blag::PostList;
@@ -201,7 +179,7 @@ sub from_dir {
   ];
   bless $self, $class;
 
-  # Create initial Posts and add hash() of PostList::Elements:
+  # Create initial Posts and add hash() of Posts:
   $self->scan;
 
   $self
@@ -220,9 +198,9 @@ sub scan {
 
     if ( $self->posts->exists($maybe_id) ) {
       my $current = $self->posts->get($maybe_id);
-      unless ($current->post->path->basename eq $child->basename) {
+      unless ($current->path->basename eq $child->basename) {
         warn "Possible ID conflict for $maybe_id"
-          if $current->post->path->exists;
+          if $current->path->exists;
       }
       next SCAN if $child->stat->mtime == $current->mtime;
     }
@@ -236,9 +214,8 @@ sub scan {
 sub _reset_post {
   my ($self, $id, $path) = @_;
   my $post = Blag::Post->from_file( $path );
-  my $post_meta = Blag::PostList::Element->new( $post );
-  $self->posts->set( $id => $post_meta );
-  $post_meta
+  $self->posts->set( $id => $post );
+  $post
 }
 
 sub as_array {
@@ -249,7 +226,7 @@ sub as_array {
 sub by_date {
   my ($self) = @_;
   $self->posts->values
-    ->sort_by(sub { $_->post->date })
+    ->sort_by(sub { $_->date })
     ->reverse
 }
 
@@ -262,18 +239,18 @@ sub by_mtime {
 sub by_topic {
   my ($self) = @_;
   $self->posts->values
-    ->sort_by(sub { $_->post->topic })
+    ->sort_by(sub { $_->topic })
 }
 
 sub get {
   my ($self, $id) = @_;
-  my $post_meta = $self->posts->get($id) || return;
-  my $old_mtime = $post_meta->mtime;
-  my $cur_mtime = $post_meta->post->path->stat->mtime;
+  my $post = $self->posts->get($id) || return;
+  my $old_mtime = $post->mtime;
+  my $cur_mtime = $post->path->stat->mtime;
   unless ($old_mtime == $cur_mtime) {
-    $post_meta = $self->_reset_post( $id => $post_meta->post->path )
+    $post = $self->_reset_post( $id => $post->path )
   }
-  $post_meta
+  $post
 }
 
 sub path  { $_[0]->[PATH]  }
@@ -358,13 +335,13 @@ get '/post/:id' => sub {
   my $self = shift;
 
   my $id   = $self->param('id');
-  my $post_meta = $postlist->get($id);
-  unless ($post_meta) {
+  my $post = $postlist->get($id);
+  unless ($post) {
     $self->render( text => 'No such blag!', status => 404 );
     return
   }
 
-  $self->stash( post => $post_meta->post );
+  $self->stash( post => $post );
   $self->stash( blagcfg => $blagcfg );
 
   my $tmpl = $cfghash->{post_template} || 'post';
