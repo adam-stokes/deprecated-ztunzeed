@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-package main; our $VERSION = '0.001004';
+package main; our $VERSION = '0.001005';
 
 ## -> Install me:
 ##
@@ -68,6 +68,27 @@ use Text::Markdown 'markdown';
 #   <Single empty line>
 #   <Markdown content>
 
+sub PATH     () { 0 }
+sub TOPIC    () { 1 }
+sub DATE     () { 2 }
+sub BLAGID   () { 3 }
+sub HTML     () { 4 }
+sub MTIME    () { 5 }
+
+sub html  { $_[0]->[HTML]  }
+sub path  { $_[0]->[PATH]  }
+sub topic { $_[0]->[TOPIC] }
+sub date  { $_[0]->[DATE]  }
+sub id    { $_[0]->[BLAGID] }
+sub mtime { $_[0]->[MTIME] }
+
+sub last_edit { 
+  my ($self) = @_;
+  POSIX::strftime("%Y-%m-%d %H:%M:%S",
+    localtime( $self->mtime )
+  )
+}
+
 sub _parseblag {
   my ($path) = @_;
   confess "Expected a Path::Tiny object"
@@ -101,20 +122,6 @@ sub _parseblag {
     contents => $contents,
   )
 }
-
-sub PATH     () { 0 }
-sub TOPIC    () { 1 }
-sub DATE     () { 2 }
-sub BLAGID   () { 3 }
-sub HTML     () { 4 }
-sub MTIME    () { 5 }
-
-sub html  { $_[0]->[HTML]  }
-sub path  { $_[0]->[PATH]  }
-sub topic { $_[0]->[TOPIC] }
-sub date  { $_[0]->[DATE]  }
-sub id    { $_[0]->[BLAGID] }
-sub mtime { $_[0]->[MTIME] }
 
 sub _renderblag {
   my ($contents) = @_;
@@ -150,13 +157,6 @@ sub from_file {
     $html,             ## HTML
     $mtime,            ## MTIME
   ], $class
-}
-
-sub last_edit { 
-  my ($self) = @_;
-  POSIX::strftime("%Y-%m-%d %H:%M:%S",
-    localtime( $self->mtime )
-  )
 }
 
 
