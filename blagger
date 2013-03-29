@@ -79,8 +79,8 @@ sub _parseblag {
   confess "Expected a Path::Tiny object"
     unless ref $path and $path->can('lines_utf8');
 
-  my @lines = $path->lines_utf8;
-  my $full = array(@lines);
+  my $full = array( $path->lines_utf8 );
+
   my $header   = $full->items_before(sub { $_ eq "\n" });
   my $contents = $full->items_after(sub { $_ eq "\n" });
 
@@ -267,7 +267,7 @@ sub by_topic {
 
 sub get {
   my ($self, $id) = @_;
-  my $post_meta = $self->posts->get($id);
+  my $post_meta = $self->posts->get($id) || return;
   my $old_mtime = $post_meta->mtime;
   my $cur_mtime = $post_meta->post->path->stat->mtime;
   unless ($old_mtime == $cur_mtime) {
