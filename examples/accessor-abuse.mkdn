@@ -27,7 +27,7 @@ advantage of lexical capture, and install it as-needed:
       *{ $class .'::'. $attr } = $accessor;
     }
 
-... but this accessor is going to be __slow__. We're interpolating
+... but this accessor is going to be __slow__. We're evaluating
 lexical captures all the way, and checking for a default even though we may
 not have one.
 
