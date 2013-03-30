@@ -236,7 +236,7 @@ sub get {
   my ($self, $id) = @_;
   my $post = $self->posts->get($id) || return;
   unless ($post->mtime == $post->path->state->mtime) {
-    $post = $self->_reset_post( $id => $post->path )
+    return $self->_reset_post( $id => $post->path )
   }
   $post
 }
