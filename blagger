@@ -17,15 +17,12 @@ BEGIN { local $@; my @failed;
     Path::Tiny
     Text::Markdown
   /;
+
   for my $mod (@prereq) {
     eval "require $mod; 1";
-    if ($@) {
-      warn $@;
-      push @failed, $mod;
-    }
+    if ($@) { warn $@;  push @failed, $mod  }
   }
-  die "Failed to load modules:\n ".join "\n ", @failed
-    if @failed;
+  die "Failed to load modules:\n ".join "\n ", @failed if @failed;
 };
 
 
@@ -62,12 +59,6 @@ use List::Objects::WithUtils;
 use Path::Tiny ();
 use Text::Markdown 'markdown';
 
-# Post format:
-#   Topic: One-liner summary
-#   Date: YYYY-MM-DD
-#   <Single empty line>
-#   <Markdown content>
-
 sub PATH     () { 0 }
 sub TOPIC    () { 1 }
 sub DATE     () { 2 }
@@ -84,9 +75,7 @@ sub mtime { $_[0]->[MTIME] }
 
 sub last_edit { 
   my ($self) = @_;
-  POSIX::strftime("%Y-%m-%d %H:%M:%S",
-    localtime( $self->mtime )
-  )
+  POSIX::strftime( '%Y-%m-%d %H:%M:%S', localtime($self->mtime) )
 }
 
 sub _parseblag {
@@ -112,6 +101,7 @@ sub _parseblag {
   my $topic = substr($topicline, 7);
   warn "Blag post at @{[$path->absolute]} is missing a Topic:\n"
     unless $topic;
+
   my $date = substr($dateline, 6);
   warn "Blag post at @{[$path->absolute]} is missing a Date:\n"
     unless $date;
@@ -245,9 +235,7 @@ sub by_topic {
 sub get {
   my ($self, $id) = @_;
   my $post = $self->posts->get($id) || return;
-  my $old_mtime = $post->mtime;
-  my $cur_mtime = $post->path->stat->mtime;
-  unless ($old_mtime == $cur_mtime) {
+  unless ($post->mtime == $post->path->state->mtime) {
     $post = $self->_reset_post( $id => $post->path )
   }
   $post
