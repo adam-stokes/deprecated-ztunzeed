@@ -88,10 +88,17 @@ sub _parseblag {
   my $header   = $full->items_before(sub { $_ eq "\n" });
   my $contents = $full->items_after(sub { $_ eq "\n" });
 
-  my $topicline = 
-    $header->grep(sub { index($_[0], 'Topic: ') == 0 })->get(0);
-  my $dateline =
-    $header->grep(sub { index($_[0], 'Date: ') == 0 })->get(0);
+  my ($topicline,$dateline);
+  for my $line ($header->all) {
+    if ( index($line, 'Topic: ') == 0 ) {
+      $topicline = $line;
+      next
+    }
+    if ( index($line, 'Date: ') == 0 ) {
+      $dateline = $line;
+      next
+    }
+  }
 
   warn "Malformed blag post at ".$path->absolute
     unless $topicline and $dateline;
@@ -235,7 +242,7 @@ sub by_topic {
 sub get {
   my ($self, $id) = @_;
   my $post = $self->posts->get($id) || return;
-  unless ($post->mtime == $post->path->state->mtime) {
+  unless ($post->mtime == $post->path->stat->mtime) {
     return $self->_reset_post( $id => $post->path )
   }
   $post
