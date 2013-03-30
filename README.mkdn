@@ -14,7 +14,12 @@
 
 ## Blag stuff using Markdown:
 
+    $ EDITOR="vim"
     $ ./blagger blag this-new-entry
+
+## Edit or publish pending posts:
+
+    $ ./blagger reblag this-new-entry
 
 See _examples/_ for example posts.
 
