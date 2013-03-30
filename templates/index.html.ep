@@ -1,6 +1,6 @@
 <html>
 <head>
-  <title><%= $blagcfg->title %></title>
+  <title><%= blagconf->title %></title>
   <link rel="stylesheet"  href="/style.css"
        type="text/css" 
        media="screen" 
@@ -10,9 +10,9 @@
 
 <body>
 
-<h2><%= $blagcfg->title %></h2>
+<h2><%= blagconf->title %></h2>
 
-<p><h4><%= $blagcfg->description %></h4></p>
+<p><h4><%= blagconf->description %></h4></p>
 
 <div>
 <ul>
@@ -31,11 +31,11 @@
 
 <div id="footer">
   <p>
-    <i><%= $blagcfg->author %></i>
-    :: <%== $blagcfg->contact %>
+    <i><%= blagconf->author %></i>
+    :: <%== blagconf->contact %>
     :: <i>
         <a href="http://bitbucket.org/avenj/blagger">
-          blagger <%= $blagcfg->version %>
+          blagger <%= blagconf->version %>
         </a>
        </i>
   </p>

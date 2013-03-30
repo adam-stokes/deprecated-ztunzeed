@@ -268,7 +268,7 @@ sub run {
   my $postdir = $self->app->config->{blagcfg}->{post_directory};
   die "No post_directory configured\n" unless $postdir;
   $postdir =~ s/%X/$Bin/g;
-  $postdir    = path($postdir);
+  $postdir = path($postdir);
   my $pendingdir = $postdir->child('pending');
   $pendingdir->mkpath;
 
@@ -321,7 +321,7 @@ sub run {
   my $postdir = $self->app->config->{blagcfg}->{post_directory};
   die "No post_directory configured\n" unless $postdir;
   $postdir =~ s/%X/$Bin/g;
-  $postdir    = path($postdir);
+  $postdir = path($postdir);
   my $pendingdir = $postdir->child('pending');
   die "No pending posts\n" 
     unless $pendingdir->exists
@@ -361,7 +361,9 @@ my $postdir = $cfghash->{post_directory} || '%X/posts';
 $postdir =~ s/%X/$Bin/g;
 
 my $postlist = Blag::PostList->from_dir( $postdir );
+
 my $blagcfg  = Blag::Cfg->new(%$cfghash);
+helper blagconf => sub { $blagcfg };
 
 get '/style.css' => sub { 
   my $self = shift;
@@ -372,7 +374,6 @@ get '/style.css' => sub {
 get '/' => sub {
   my $self = shift;
 
-  $self->stash( blagcfg  => $blagcfg );
   $self->stash( postlist => $postlist->scan );
 
   my $tmpl = $cfghash->{index_template} || 'index';
@@ -390,7 +391,6 @@ get '/post/:id' => sub {
   }
 
   $self->stash( post => $post );
-  $self->stash( blagcfg => $blagcfg );
 
   my $tmpl = $cfghash->{post_template} || 'post';
   $self->render($tmpl);
