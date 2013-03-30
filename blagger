@@ -268,9 +268,16 @@ sub run {
   my $postdir = $self->app->config->{blagcfg}->{post_directory};
   die "No post_directory configured\n" unless $postdir;
   $postdir =~ s/%X/$Bin/g;
+  $postdir    = path($postdir);
+  my $pendingdir = $postdir->child('pending');
+  $pendingdir->mkpath;
 
-  my $file = path($postdir)->child($post.".mkdn");
-  die "Post exists at $file\n" if $file->exists;
+  my $file = $pendingdir->child($post.".mkdn");
+  die "Post exists at $file, maybe you wanted 'reblag'?\n" 
+    if $file->exists;
+
+  my $dest = $postdir->child($post.".mkdn");
+  die "Post already published at $dest\n" if $dest->exists;
 
   print "Topic: ";
   my $topic = <STDIN>; chomp $topic;
@@ -287,12 +294,58 @@ sub run {
 
   system($ENV{EDITOR}, "$file");
 
-  ## FIXME
-  ##  Create a pendingposts dir
-  ##  Disallow creation if exists in current or pending
-  ##  Prompt after save wrt whether to pull out of pending
-  ##  Provide a 'reblag' editor command?
+  print "Publish now? [Y/n] ";
+  my $ans = <STDIN>; chomp $ans; $ans = lc($ans || 'y');
+  if ($ans eq 'y') {
+    say "\nMoving to ".$dest->absolute;
+    $file->move( $dest->absolute );
+  } else {
+    say "\nMove skipped; use 'reblag $post' to edit";
+  }
 }
+
+
+package Mojolicious::Command::reblag;
+use feature 'say';
+use FindBin '$Bin';
+use Mojo::Base 'Mojolicious::Command';
+use Path::Tiny;
+use POSIX ();
+
+has description => "Edit pending blags.\n";
+
+sub run {
+  my ($self, $post) = @_;
+  die "Usage: blagger reblag pending-entry-id\n" unless $post;
+
+  my $postdir = $self->app->config->{blagcfg}->{post_directory};
+  die "No post_directory configured\n" unless $postdir;
+  $postdir =~ s/%X/$Bin/g;
+  $postdir    = path($postdir);
+  my $pendingdir = $postdir->child('pending');
+  die "No pending posts\n" 
+    unless $pendingdir->exists
+    and $pendingdir->children;
+
+  my $file = $pendingdir->child($post.".mkdn");
+  die "No such pending post $post\n"
+    unless $file->exists;
+
+  my $dest = $postdir->child($post.".mkdn");
+  die "Post already published at $dest\n" if $dest->exists;
+
+  system($ENV{EDITOR}, "$file");
+ 
+  print "Publish now? [Y/n] ";
+  my $ans = <STDIN>; chomp $ans; $ans = lc($ans || 'y');
+  if ($ans eq 'y') {
+    say "\nMoving to ".$dest->absolute;
+    $file->move( $dest->absolute );
+  } else {
+    say "\nMove skipped; use 'reblag $post' to edit";
+  }
+}
+
 
 package main;
 use 5.10.1;
