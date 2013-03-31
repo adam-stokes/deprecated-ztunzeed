@@ -348,10 +348,10 @@ sub run {
       die "No pending posts\n" unless keys %enum;
       say "\nPending:\n";
       print map {; "  $_ => ".$enum{$_}."\n" } keys %enum;
-      print "\nSelect a post number: ";
+      print "\nSelect a post number (or enter tag): ";
       $choice = <STDIN>;  chomp $choice;
     }
-    $post = $enum{$choice}
+    $post = $enum{$choice} || $choice
   }
 
   my $file = $pendingdir->child($post.".mkdn");
