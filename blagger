@@ -45,6 +45,12 @@ sub AUTHOR  () { 1 }
 sub DESC    () { 2 }
 sub CONTACT () { 3 }
 
+sub author  { $_[0]->[AUTHOR]  }
+sub contact { $_[0]->[CONTACT] }
+sub title   { $_[0]->[TITLE]   }
+sub version { $::VERSION }
+sub description { $_[0]->[DESC] }
+
 sub new {
   my ($class, %params) = @_;
   bless [
@@ -55,12 +61,6 @@ sub new {
   ], $class
 }
 
-sub author  { $_[0]->[AUTHOR]  }
-sub contact { $_[0]->[CONTACT] }
-sub title   { $_[0]->[TITLE]   }
-sub version { $::VERSION }
-sub description { $_[0]->[DESC] }
-
 
 package Blag::Post;
 use strict; use warnings;
@@ -69,12 +69,12 @@ use List::Objects::WithUtils;
 use Path::Tiny ();
 use Text::Markdown 'markdown';
 
-sub PATH     () { 0 }
-sub TOPIC    () { 1 }
-sub DATE     () { 2 }
-sub BLAGID   () { 3 }
-sub HTML     () { 4 }
-sub MTIME    () { 5 }
+sub PATH   () { 0 }
+sub TOPIC  () { 1 }
+sub DATE   () { 2 }
+sub BLAGID () { 3 }
+sub HTML   () { 4 }
+sub MTIME  () { 5 }
 
 sub html  { $_[0]->[HTML]  }
 sub path  { $_[0]->[PATH]  }
@@ -176,6 +176,9 @@ use Path::Tiny ();
 sub PATH     () { 0 }
 sub POSTHASH () { 1 }
 
+sub path  { $_[0]->[PATH]  }
+sub posts { $_[0]->[POSTHASH] }
+
 sub from_dir {
   my ($class, $dirpath) = @_;
 
@@ -187,9 +190,7 @@ sub from_dir {
   bless $self, $class;
 
   # Create initial Posts and add hash() of Posts:
-  $self->scan;
-
-  $self
+  $self->scan
 }
 
 sub scan {
@@ -258,9 +259,6 @@ sub get {
   }
   $post
 }
-
-sub path  { $_[0]->[PATH]  }
-sub posts { $_[0]->[POSTHASH] }
 
 
 package Mojolicious::Command::blag;
