@@ -19,7 +19,7 @@
 
 ## Edit or publish pending posts:
 
-    $ ./blagger reblag this-new-entry
+    $ ./blagger reblag
 
 See _examples/_ for example posts.
 
