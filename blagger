@@ -1,14 +1,5 @@
 #!/usr/bin/env perl
-package main; our $VERSION = '0.001006';
-
-## -> Install me:
-##
-## Config me    -> $ vim blagger.conf
-## Start me     -> $ hypnotoad blagger
-## Blag stuff   -> $ ./blagger blag this-blag-entry
-##
-## See 'examples/' for example posts.
-
+package main; our $VERSION = '0.001007';
 
 BEGIN { local $@; my @failed;
   my @prereq = qw/
@@ -25,6 +16,26 @@ BEGIN { local $@; my @failed;
   die "Failed to load modules:\n ".join "\n ", @failed if @failed;
 };
 
+package Blag::Util;
+use strict; use warnings;
+
+sub sformat {
+  my ($class, $string) = splice @_, 0, 2;
+  return '' unless defined $string and length $string;
+  my %vars = @_;
+  my $rpl = sub {
+    my ($orig, $match) = @_;
+    if (defined $vars{$match}) {
+      return ref $vars{$match} eq 'CODE' ?
+        $vars{$match}->($match, $orig, $vars{$match})
+        : $vars{$match}
+    }
+    $orig
+  };
+  my $re = qr/(%([^\s%]+)%?)/;
+  $string =~ s/$re/$rpl->($1,$2)/ge;
+  $string
+}
 
 package Blag::Cfg;
 use strict; use warnings;
@@ -267,7 +278,7 @@ sub run {
 
   my $postdir = $self->app->config->{blagcfg}->{post_directory};
   die "No post_directory configured\n" unless $postdir;
-  $postdir =~ s/%X/$Bin/g;
+  $postdir = Blag::Util->sformat( $postdir, bindir => $Bin );
   $postdir = path($postdir);
   my $pendingdir = $postdir->child('pending');
   $pendingdir->mkpath;
@@ -320,7 +331,7 @@ sub run {
 
   my $postdir = $self->app->config->{blagcfg}->{post_directory};
   die "No post_directory configured\n" unless $postdir;
-  $postdir =~ s/%X/$Bin/g;
+  $postdir = Blag::Util->sformat( $postdir, bindir => $Bin );
   $postdir = path($postdir);
   my $pendingdir = $postdir->child('pending');
   die "No pending posts\n" 
@@ -357,8 +368,8 @@ plugin 'Config';
 
 my $cfghash = app->config->{blagcfg} || +{};
 
-my $postdir = $cfghash->{post_directory} || '%X/posts';
-$postdir =~ s/%X/$Bin/g;
+my $postdir = $cfghash->{post_directory} || '%bindir%/posts';
+$postdir = Blag::Util->sformat( $postdir, bindir => $Bin );
 
 my $postlist = Blag::PostList->from_dir( $postdir );
 
