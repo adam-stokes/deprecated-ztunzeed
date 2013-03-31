@@ -278,8 +278,7 @@ sub run {
 
   my $postdir = $self->app->config->{blagcfg}->{post_directory};
   die "No post_directory configured\n" unless $postdir;
-  $postdir = Blag::Util->sformat( $postdir, bindir => $Bin );
-  $postdir = path($postdir);
+  $postdir = path( Blag::Util->sformat($postdir, bindir => $Bin) );
   my $pendingdir = $postdir->child('pending');
   $pendingdir->mkpath;
 
@@ -327,16 +326,33 @@ has description => "Edit pending blags.\n";
 
 sub run {
   my ($self, $post) = @_;
-  die "Usage: blagger reblag pending-entry-id\n" unless $post;
 
   my $postdir = $self->app->config->{blagcfg}->{post_directory};
   die "No post_directory configured\n" unless $postdir;
-  $postdir = Blag::Util->sformat( $postdir, bindir => $Bin );
-  $postdir = path($postdir);
+  $postdir = path( Blag::Util->sformat( $postdir, bindir => $Bin ) );
   my $pendingdir = $postdir->child('pending');
   die "No pending posts\n" 
     unless $pendingdir->exists
     and $pendingdir->children;
+
+  unless (defined $post) {
+    my($choice, %enum);
+    until ($choice) {
+      my $idx; %enum = ();
+      for my $child ($pendingdir->children) {
+        my $basename = $child->basename;
+        if ($basename =~ s/\.mkdn$//) {
+          $enum{ ++$idx } = $basename;
+        }
+      }
+      die "No pending posts\n" unless keys %enum;
+      say "\nPending:\n";
+      print map {; "  $_ => ".$enum{$_}."\n" } keys %enum;
+      print "\nSelect a post number: ";
+      $choice = <STDIN>;  chomp $choice;
+    }
+    $post = $enum{$choice}
+  }
 
   my $file = $pendingdir->child($post.".mkdn");
   die "No such pending post $post\n"
