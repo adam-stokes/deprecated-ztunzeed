@@ -14,7 +14,8 @@ BEGIN { local $@; my @failed;
     eval "require $mod; 1";
     if ($@) { warn $@;  push @failed, $mod  }
   }
-  die "Failed to load modules:\n ".join "\n ", @failed if @failed;
+  die "\nFailed to load modules:\n ".join "\n ", @failed, "\n"
+    if @failed;
 };
 
 package Blag::Util;
