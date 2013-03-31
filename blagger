@@ -365,7 +365,16 @@ sub run {
   my $ans = <STDIN>; chomp $ans; $ans = lc($ans || 'y');
   if ($ans eq 'y') {
     say "\nMoving to ".$dest->absolute;
-    $file->move( $dest->absolute );
+    my @lines = $file->lines_utf8;
+    for (@lines) {
+      if (index($_, 'Date: ') == 0) {
+        my $date = POSIX::strftime( "%Y-%m-%d", localtime );
+        $_ = "Date: $date\n";
+        last
+      }
+    }
+    $dest->spew_utf8(@lines);
+    say "Success!"
   } else {
     say "\nMove skipped; use 'reblag $post' to edit";
   }
