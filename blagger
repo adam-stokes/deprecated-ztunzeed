@@ -374,7 +374,7 @@ sub run {
       }
     }
     $dest->spew_utf8(@lines);
-    say "Success!"
+    say "Success! You may want to remove $file";
   } else {
     say "\nMove skipped; use 'reblag $post' to edit";
   }
