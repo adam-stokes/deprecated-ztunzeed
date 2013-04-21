@@ -275,6 +275,11 @@ sub run {
   my ($self, $post) = @_;
   die "Usage: blagger blag new-blag-entry-id\n" unless $post;
 
+  unless ($post =~ /^[A-Za-z0-9_-]$/) {
+    die "Invalid post name '$post'\n",
+      "Post names should be in the 'a-z 0-9 _ -' set"
+  }
+
   my $postdir = $self->app->config->{blagcfg}->{post_directory};
   die "No post_directory configured\n" unless $postdir;
   $postdir = path( Blag::Util->sformat($postdir, bindir => $Bin) );
@@ -417,6 +422,10 @@ get '/post/:id' => sub {
   my $self = shift;
 
   my $id   = $self->param('id');
+  unless ($id =~ /^[A-Za-z0-9_-]$/) {
+    $self->render( text => 'Invalid blag name!', status => 404 );
+    return
+  }
 
   my ($post, $retry);
   FETCH_POST: {
@@ -427,6 +436,7 @@ get '/post/:id' => sub {
         $self->render( text => 'No such blag!', status => 404 );
         return
       }
+      ## FIXME try to load this specific post instead of re-scanning
       $postlist->scan;
       ++$retry;
       redo FETCH_POST
