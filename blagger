@@ -275,7 +275,7 @@ sub run {
   my ($self, $post) = @_;
   die "Usage: blagger blag new-blag-entry-id\n" unless $post;
 
-  unless ($post =~ /^[A-Za-z0-9_-]$/) {
+  unless ($post =~ /^[A-Za-z0-9_-]+$/) {
     die "Invalid post name '$post'\n",
       "Post names should be in the 'a-z 0-9 _ -' set"
   }
@@ -422,7 +422,7 @@ get '/post/:id' => sub {
   my $self = shift;
 
   my $id   = $self->param('id');
-  unless ($id =~ /^[A-Za-z0-9_-]$/) {
+  unless ($id =~ /^[A-Za-z0-9_-]+$/) {
     $self->render( text => 'Invalid blag name!', status => 404 );
     return
   }
