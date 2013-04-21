@@ -417,19 +417,18 @@ get '/post/:id' => sub {
   my $self = shift;
 
   my $id   = $self->param('id');
-  my $post;
 
+  my ($post, $retry);
   FETCH_POST: {
     $post = $postlist->get($id);
 
-    my $retried;
     unless ($post) {
-      if ($retried) {
+      if ($retry) {
         $self->render( text => 'No such blag!', status => 404 );
         return
       }
       $postlist->scan;
-      ++$retried;
+      ++$retry;
       redo FETCH_POST
     }
   }
