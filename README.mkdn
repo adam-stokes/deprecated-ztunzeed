@@ -1,5 +1,17 @@
 # blagger
 
+Tiny featureless static blogger.
+
+Required:
+
+* perl-5.10.1+
+* List::Objects::WithUtils
+* Mojolicious
+* Path::Tiny
+* Text::Markdown
+
+(... someday I'll package this properly. Maybe.)
+
 ## Fetch me:
 
     $ git clone git://github.com/avenj/blagger.git
@@ -14,8 +26,7 @@
 
 ## Blag stuff using Markdown:
 
-    $ EDITOR="vim"
-    $ ./blagger blag this-new-entry
+    $ EDITOR="vim" ./blagger blag this-new-entry
 
 ## Edit or publish pending posts:
 
