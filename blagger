@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-package main;  our $VERSION = '0.001007+bm1';
+package main;  our $VERSION = '0.001007+bm2';
 use 5.16.3;
 
 BEGIN {
@@ -277,7 +277,10 @@ sub by_topic {
 
 sub by_cat {
     my ($self) = @_;
-    $self->posts->values->sort_by(sub { $_->category });
+    $self->posts->values
+      ->grep(sub { $_->category =~ /ubuntu/i })
+      ->sort_by(sub                { $_->date })
+      ->reverse;
 }
 
 sub get {

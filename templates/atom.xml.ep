@@ -12,7 +12,7 @@
   </author>
   <generator uri="https://github.com/battlemidget/blagger/">blagger (patched) <%= blagconf->version %></generator>
 
-  % for my $post ($postlist->by_date->all) {
+  % for my $post ($postlist->by_cat->all) {
   <entry>
     <title type="html"><![CDATA[<%= $post->topic %>]]></title>
     <link href="<%= url_for %>/<%= $post->id %>"/>
