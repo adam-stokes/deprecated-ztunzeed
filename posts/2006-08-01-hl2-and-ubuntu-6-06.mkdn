@@ -1,0 +1,7 @@
+Topic: HL2 and ubuntu 6.06
+Date: 2006-08-01
+
+Once Ubuntu was installed I visited here :http://ubuntuforums.org/showthread.php?t=190025Installed Automatix and with that I was able to install the latest Wine (0.9.18 at the time of this writing). This comes with better support for HL2 and WoW.Next following this article :linux gamers wine+linux howtoI now have Steam,HL2, DoD, and CS:S running smoothly on my Ubuntu 6.06 box.Oh and bottom left corner is gaim 2.0 beta 3, pretty sweet too :D
+
+
+

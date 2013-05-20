@@ -1,0 +1,17 @@
+Topic: zee bambo
+Date: 2011-01-20
+
+Thanks to f14 bamboo how-to I managed to get my tablet up and playing
+nicely. I've never really drew anything digitally so I decided to give
+this tablet a try. The wacom is a little weird to get used to with
+hovering of the stylus for mouse movements. Other than the awkwardness
+I was able to put some form of a person together through the gimp. It's
+not much and not really crisp and professional like some of these
+other talented artists. Hopefully with some more practice I can save
+trees and still keep drawing :)
+
+Graphics applications for drawing:
+
+```console
+apt-get install gimp mypaint
+```

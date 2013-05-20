@@ -1,0 +1,13 @@
+Topic: cas 0.14 release
+Date: 2009-05-06
+
+CAS released to Fedora/EPEL testing today should show up in repo's
+soon.Some enhancements made in this release:SQLite backendSnippet
+support for more advanced automation of crash.Better maintenance
+support within cas-admin to deal with stale/unused files.Preliminary
+support for running as non-root (requires func to be configured as
+non-root for remote analysis as well)Python 2.3 or greater (mainly for
+EPEL-4)Documentation updates are also available, thanks to Sphinx I
+actually enjoy writing them. Those may be viewed in
+/usr/share/doc/cas-0.14/ or
+[The how-to](https://fedorahosted.org/cas/wiki/HowToUseCas).
