@@ -61,6 +61,10 @@ i.postdate {
   color: darkslategray;
 }
 
+i.categories {
+  color: darkslategray;
+}
+
 code {
   color: #fff;
   font-size: 90%;

@@ -1,7 +1,8 @@
 Topic: "x230T, realtek wifi, and my solution"
 Date: 2013-03-22
+Category: ubuntu, lenovo
 
-## Recap ##
+## Recap
 
 I can ping all devices on the network _except_ the gateway
 (192.168.0.1) and in turn can not access outside of the network
@@ -110,7 +111,7 @@ This also doesn't happen outside of my network as I was able to use
 this laptop at UDS-R which kind of points to a router issue but
 anything without a Realtek adapter works :\
 
-## Solution ##
+## Solution
 
 Turns out that this particular laptop was having issues resolving dns queries because on my particular cable modem/router there was an option for "Enable DNS relay" that was not checked (off). Once I checked that option my laptop suddenly started working! I tried to do some more research on what could be a possible reason as to why this specific laptop/wifi combo requires dns relay to be enabled on the router in order to access anything outside my network? Another odd thing is that if I directly connect the laptop to the router everything works so I assume it is something to do with the actual wifi driver/hardware. Anyway, I'm finally back to being able to use my recently purchased laptop :)
 

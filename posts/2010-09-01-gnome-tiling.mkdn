@@ -1,5 +1,6 @@
 Topic: gnome tiling
 Date: 2010-09-01
+Category: gnome
 
 I've been looking for an application to tile my windows without
 actually having to use a tiling manager (xmonad, ion, etc). So far I've

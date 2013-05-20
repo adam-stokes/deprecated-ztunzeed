@@ -1,5 +1,6 @@
 Topic: VIM TIps
 Date: 2005-08-23
+Category: vim
 
 Just thought I would post some things I find helpful when working with
 VIM. Remember if you are running Fedora Core you can install VIM with

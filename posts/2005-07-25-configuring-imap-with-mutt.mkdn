@@ -1,5 +1,6 @@
 Topic: Configuring imap with mutt
 Date: 2005-07-25
+Category: mutt
 
 Place this in your ~/.muttrc
 

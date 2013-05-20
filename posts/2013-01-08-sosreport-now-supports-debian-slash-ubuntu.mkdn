@@ -1,5 +1,6 @@
 Topic: "SOSreport now supports Debian/Ubuntu"
 Date: 2013-01-08
+Category: debian, sosreport, ubuntu
 
 Sosreport is a set of tools is designed to provide information to support organizations
 in an extensible manner, allowing third parties, package maintainers, and

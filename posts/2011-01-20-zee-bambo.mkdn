@@ -1,5 +1,6 @@
 Topic: zee bambo
 Date: 2011-01-20
+Category: wacom
 
 Thanks to f14 bamboo how-to I managed to get my tablet up and playing
 nicely. I've never really drew anything digitally so I decided to give

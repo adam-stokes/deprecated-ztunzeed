@@ -1,5 +1,6 @@
 Topic: "Tornado 2.3+ dropbox auth mixin"
 Date: 2012-09-27
+Category: tornado, python
 
 Working on [Tornado][] web application server has been a great
 experience. I've written a few simple OAuth mixin's and this

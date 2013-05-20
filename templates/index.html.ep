@@ -35,8 +35,8 @@
     <i><%= blagconf->author %></i>
     :: <%== blagconf->contact %>
     :: <i>
-        <a href="http://bitbucket.org/avenj/blagger">
-          blagger <%= blagconf->version %>
+        <a href="https://github.com/battlemidget/blagger">
+          blagger (patched) <%= blagconf->version %>
         </a>
        </i>
   </p>

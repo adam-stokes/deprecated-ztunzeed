@@ -1,5 +1,6 @@
 Topic: urxvt, fvwm
 Date: 2007-10-16
+Category: urxvt
 
 Some lost configuration items I've missed for awhile and finally brought back -- one being tabbed windows in urxvt. You can install urxvt (rxvt-unicode) with the following :
 

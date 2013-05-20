@@ -1,5 +1,6 @@
 Topic: "Lenovo x230 Tablet tips"
 Date: 2012-11-01
+Category: lenovo
 
 Some tips for getting around the lack of tablet functionality with Ubuntu Precise and even Quantal. First is a small shell script for disabling finger touch on the tablet when you want to use the stylus for writing/drawing.
 

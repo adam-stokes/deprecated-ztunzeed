@@ -1,5 +1,6 @@
 Topic: "Exporting variables for Eshell"
 Date: 2012-10-18
+Category: emacs
 
 Usually when I'm working in Emacs it is running as a daemon. A lot of
 times when I'm doing patch work and commits it'll want to dump me into

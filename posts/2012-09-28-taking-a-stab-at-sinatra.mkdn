@@ -1,5 +1,6 @@
 Topic: "Taking a stab at sinatra"
 Date: 2012-09-28
+Category: ruby
 
 And it is not going well, if anyone has any idea what I am missing
 that would be saweet.

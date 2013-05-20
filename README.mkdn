@@ -1,40 +1,10 @@
-# blagger
+# personal blog using blagger
 
-Tiny featureless static blogger.
+# writer
 
-Required:
+Adam Stokes [adam.stokes at ubuntu.com](http://astokes.org)
 
-* perl-5.10.1+
-* List::Objects::WithUtils
-* Mojolicious
-* Path::Tiny
-* Text::Markdown
-
-(... someday I'll package this properly. Maybe.)
-
-## Fetch me:
-
-    $ git clone git://github.com/avenj/blagger.git
-
-## Config me:
-
-    $ vim blagger.conf
-
-## Start me or reload on-the-fly:
-
-    $ hypnotoad blagger
-
-## Blag stuff using Markdown:
-
-    $ EDITOR="vim" ./blagger blag this-new-entry
-
-## Edit or publish pending posts:
-
-    $ ./blagger reblag
-
-See _examples/_ for example posts.
-
-# author
+# author of blagger
 
 Jon Portnoy [avenj at cobaltirc.org](http://www.cobaltirc.org)
 

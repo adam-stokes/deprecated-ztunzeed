@@ -1,5 +1,6 @@
 Topic: "Mental Note: Django 1.4.x and Storm .19"
 Date: 2013-02-21
+Category: django, python
 
 Some notes on getting Storm used as a database backend for Django. Props to James Henstridge for doing the heavy lifting.
 
@@ -28,7 +29,7 @@ Some notes on getting Storm used as a database backend for Django. Props to Jame
         # Uncomment the next line for simple clickjacking pro
     )
 
-STORM_STORES = { 'default' : "postgres://adam@localhost/testdb" }
+    STORM_STORES = { 'default' : "postgres://adam@localhost/testdb" }
 
 ### Next in my app add some models ###
 
