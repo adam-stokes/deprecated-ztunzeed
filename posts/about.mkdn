@@ -1,4 +1,4 @@
-Topic: "about"
+Topic: about
 Date: 2005-01-01
 Category: about
 

@@ -1,4 +1,4 @@
-Topic: "Mental Note: Django 1.4.x and Storm .19"
+Topic: Mental Note: Django 1.4.x and Storm .19
 Date: 2013-02-21
 Category: django, python
 

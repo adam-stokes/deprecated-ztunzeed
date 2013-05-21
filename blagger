@@ -327,7 +327,7 @@ sub run {
     print "Topic: ";
     my $topic = <STDIN>;
     chomp $topic;
-    my $date = POSIX::strftime("%Y-%m-%d", localtime);
+    my $date = POSIX::strftime("%Y-%m-%d %H:%M:%S", localtime);
     my $category = <STDIN>;
     chomp $category;
 
@@ -415,7 +415,7 @@ sub run {
         my @lines = $file->lines_utf8;
         for (@lines) {
             if (index($_, 'Date: ') == 0) {
-                my $date = POSIX::strftime("%Y-%m-%d", localtime);
+                my $date = POSIX::strftime("%Y-%m-%d %H:%M:%S", localtime);
                 $_ = "Date: $date\n";
                 last;
             }
