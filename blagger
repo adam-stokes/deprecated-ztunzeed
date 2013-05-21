@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-package main;  our $VERSION = '0.001007+bm2';
+package main;  our $VERSION = '0.001007+bm001003';
 use 5.16.3;
 
 BEGIN {
@@ -20,6 +20,9 @@ BEGIN {
       if @failed;
 }
 
+###############################################################################
+# UTIL
+###############################################################################
 package Blag::Util;
 use strict;
 use warnings;
@@ -40,21 +43,26 @@ sub sformat {
     $string;
 }
 
+###############################################################################
+# CONFIG
+###############################################################################
 package Blag::Cfg;
 use strict;
 use warnings;
 use Carp 'confess';
 
-sub TITLE ()   {0}
-sub AUTHOR ()  {1}
-sub DESC ()    {2}
-sub CONTACT () {3}
+sub TITLE ()    {0}
+sub AUTHOR ()   {1}
+sub DESC ()     {2}
+sub CONTACT ()  {3}
+sub GRAVATAR () {4}
 
 sub author      { $_[0]->[AUTHOR] }
 sub contact     { $_[0]->[CONTACT] }
 sub title       { $_[0]->[TITLE] }
 sub version     {$::VERSION}
 sub description { $_[0]->[DESC] }
+sub gravatar    { $_[0]->[GRAVATAR] }
 
 sub new {
     my ($class, %params) = @_;
@@ -63,10 +71,13 @@ sub new {
         ($params{author}      || 'No One'),                      # AUTHOR
         ($params{description} || 'Is this internet?'),           # DESC
         ($params{contact}     || '/dev/null'),                   # CONTACT
+        ($params{gravatar}    || ''),                            # GRAVATAR
     ], $class;
 }
 
-
+###############################################################################
+# POST
+###############################################################################
 package Blag::Post;
 use strict;
 use warnings;
@@ -174,7 +185,7 @@ sub from_file {
     my $contents = $item->get('contents');
     my $html     = _renderblag($contents);
 
-    my ($blagid) = $file->basename =~ /(.+)\.(?:mkdn|blag)$/;
+    my ($blagid) = $file->basename =~ /(.+)\.(?:markdown)$/;
 
     my $mtime = $file->stat->mtime;
 
@@ -190,7 +201,9 @@ sub from_file {
     ], $class;
 }
 
-
+###############################################################################
+# POSTLIST
+###############################################################################
 package Blag::PostList;
 use strict; use warnings;
 use Carp 'confess';
@@ -226,7 +239,7 @@ sub scan {
   my $iter = $dir->iterator;
   SCAN: while (my $child = $iter->()) {
     my $basename = $child->basename;
-    my ($maybe_id) = $basename =~ /(.+)\.(?:mkdn|markdown)$/;
+    my ($maybe_id) = $basename =~ /(.+)\.(?:markdown)$/;
     next SCAN unless $maybe_id;
 
     if ( $self->posts->exists($maybe_id) ) {
@@ -276,9 +289,9 @@ sub by_topic {
 }
 
 sub by_cat {
-    my ($self) = @_;
+    my ($self, $category) = @_;
     $self->posts->values
-      ->grep(sub { $_->category =~ /ubuntu/i })
+      ->grep(sub { $_->category =~ /$category/i })
       ->sort_by(sub                { $_->date })
       ->reverse;
 }
@@ -292,7 +305,9 @@ sub get {
     $post;
 }
 
-
+###############################################################################
+# COMMAND: BLAG
+###############################################################################
 package Mojolicious::Command::blag;
 use feature 'say';
 use FindBin '$Bin';
@@ -317,11 +332,11 @@ sub run {
     my $pendingdir = $postdir->child('pending');
     $pendingdir->mkpath;
 
-    my $file = $pendingdir->child($post . ".mkdn");
+    my $file = $pendingdir->child($post . ".markdown");
     die "Post exists at $file, maybe you wanted 'reblag'?\n"
       if $file->exists;
 
-    my $dest = $postdir->child(POSIX::strftime("%Y-%m-%d") . '-' .$post . ".markdown");
+    my $dest = $postdir->child(POSIX::strftime("%Y-%m-%d", localtime) . '-' .$post . ".markdown");
     die "Post already published at $dest\n" if $dest->exists;
 
     print "Topic: ";
@@ -356,7 +371,9 @@ sub run {
     }
 }
 
-
+###############################################################################
+# COMMAND: REBLAG
+###############################################################################
 package Mojolicious::Command::reblag;
 use feature 'say';
 use FindBin '$Bin';
@@ -383,7 +400,7 @@ sub run {
             my $iter = $pendingdir->iterator;
             while (my $child = $iter->()) {
                 my $basename = $child->basename;
-                if ($basename =~ s/\.mkdn$//) {
+                if ($basename =~ s/\.markdown$//) {
                     $enum{++$idx} = $basename;
                 }
             }
@@ -397,11 +414,11 @@ sub run {
         $post = $enum{$choice} // $choice;
     }
 
-    my $file = $pendingdir->child($post . ".mkdn");
+    my $file = $pendingdir->child($post . ".markdown");
     die "No such pending post $post\n"
       unless $file->exists;
 
-    my $dest = $postdir->child($post . ".mkdn");
+    my $dest = $postdir->child($post . ".markdown");
     die "Post already published at $dest\n" if $dest->exists;
 
     system($ENV{EDITOR}, "$file");
@@ -428,7 +445,9 @@ sub run {
     }
 }
 
-
+###############################################################################
+# MAIN: FEEL THE <3
+###############################################################################
 package main;
 use strict;
 use warnings;
@@ -463,10 +482,13 @@ get '/' => sub {
 };
 
 # planet.ubuntu.com
-get '/blog/categories/ubuntu/atom.xml' => sub {
+get '/*/:category/atom.xml' => sub {
     my $self = shift;
 
-    $self->stash(postlist => $postlist->scan);
+    my $category = $self->param('category');
+    my $_posts = $postlist->scan;
+
+    $self->stash(postlist => $_posts->by_cat($category));
 
     my $tmpl = 'atom';
     $self->render(template=> $tmpl, format => 'xml');
@@ -475,7 +497,10 @@ get '/blog/categories/ubuntu/atom.xml' => sub {
 # atom.xml
 get '/atom.xml' => sub {
   my $self = shift;
-  $self->stash(postlist => $postlist->scan);
+
+  my $_posts = $postlist->scan;
+
+  $self->stash(postlist => $_posts->by_date);
   my $tmpl = 'atom';
   $self->render(template=> $tmpl, format => 'xml');
 };
@@ -519,6 +544,10 @@ get '/post/:id' => sub {
     my $tmpl = $cfghash->{post_template} || 'post';
     $self->render($tmpl);
 };
+
+###############################################################################
+# START THE PARTY
+###############################################################################
 app->secret("WHO CARES RITE?");
 app->start;
 __DATA__
@@ -536,7 +565,7 @@ __DATA__
 
 <body>
 
-<h2><img src="http://www.gravatar.com/avatar/8c9c565991f088ac5b0886ef08712e5f.png" /><%= blagconf->title %></h2>
+<h2><img src="<%= blagconf->gravatar %>" /><%= blagconf->title %></h2>
 
 <p><h4><%= blagconf->description %></h4></p>
 
@@ -750,7 +779,7 @@ pre {
   </author>
   <generator uri="https://github.com/battlemidget/blagger/">blagger (patched) <%= blagconf->version %></generator>
 
-  % for my $post ($postlist->by_cat->all) {
+  % for my $post ($postlist->all) {
   <entry>
     <title type="html"><![CDATA[<%= $post->topic %>]]></title>
     <link href="/post/<%= $post->id %>"/>
