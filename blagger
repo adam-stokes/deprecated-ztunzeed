@@ -226,7 +226,7 @@ sub scan {
   my $iter = $dir->iterator;
   SCAN: while (my $child = $iter->()) {
     my $basename = $child->basename;
-    my ($maybe_id) = $basename =~ /(.+)\.(?:mkdn|blag)$/;
+    my ($maybe_id) = $basename =~ /(.+)\.(?:mkdn|markdown)$/;
     next SCAN unless $maybe_id;
 
     if ( $self->posts->exists($maybe_id) ) {
@@ -321,7 +321,7 @@ sub run {
     die "Post exists at $file, maybe you wanted 'reblag'?\n"
       if $file->exists;
 
-    my $dest = $postdir->child($post . ".mkdn");
+    my $dest = $postdir->child(POSIX::strftime("%Y-%m-%d") . '-' .$post . ".markdown");
     die "Post already published at $dest\n" if $dest->exists;
 
     print "Topic: ";
