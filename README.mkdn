@@ -9,13 +9,17 @@ I like [perlbrew](http://perlbrew.pl) and so should you :)
     $ git clone git://github.com/battlemidget/blagger.git
     $ cpanm --installdeps .
 
+## deploy
+
+    $ rex deploy
+
 ## running webserver (development)
 
     $ plackup -R
 
 ## running webserver (production)
 
-    $ plackup -l /tmp/webserver.sock -R -D
+    $ plackup -l /tmp/webserver.sock -R -D -s Starman
 
 # writer
 
