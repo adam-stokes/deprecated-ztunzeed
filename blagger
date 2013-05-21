@@ -343,6 +343,7 @@ sub run {
     my $topic = <STDIN>;
     chomp $topic;
     my $date = POSIX::strftime("%Y-%m-%d %H:%M:%S", localtime);
+    print "Categories: ";
     my $category = <STDIN>;
     chomp $category;
 
