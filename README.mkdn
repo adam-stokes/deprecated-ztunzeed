@@ -1,5 +1,22 @@
 # personal blog using blagger
 
+## recommended perl setup
+
+I like [perlbrew](http://perlbrew.pl) and so should you :)
+
+## installation
+
+    $ git clone git://github.com/battlemidget/blagger.git
+    $ cpanm --installdeps .
+
+## running webserver (development)
+
+    $ plackup -R
+
+## running webserver (production)
+
+    $ plackup -l /tmp/webserver.sock -R -D
+
 # writer
 
 Adam Stokes [adam.stokes at ubuntu.com](http://astokes.org)
@@ -14,4 +31,5 @@ and licensed under the same terms as Perl.
 Jon Portnoy [avenj at cobaltirc.org](http://www.cobaltirc.org)
 
 # license
+
 Licensed under the same terms as Perl.
