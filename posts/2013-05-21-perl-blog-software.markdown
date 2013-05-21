@@ -31,7 +31,7 @@ modifications. Some additional features include:
 * Generates posts with YYYY/MM/DD prepended (keeps everything in a
   good order)
 * Gravatar support (elementary, could stand to use something other
-  than harded urls :))
+  than hard coded urls :))
 
 Some things I plan on adding
 
