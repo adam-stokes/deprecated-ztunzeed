@@ -472,6 +472,14 @@ get '/blog/categories/ubuntu/atom.xml' => sub {
     $self->render(template=> $tmpl, format => 'xml');
 };
 
+# atom.xml
+get '/atom.xml' => sub {
+  my $self = shift;
+  $self->stash(postlist => $postlist->scan);
+  my $tmpl = 'atom';
+  $self->render(template=> $tmpl, format => 'xml');
+};
+
 get '/about' => sub {
   my $self = shift;
   my $tmpl = $cfghash->{about_template} || 'about';
@@ -513,5 +521,242 @@ get '/post/:id' => sub {
 };
 app->secret("WHO CARES RITE?");
 app->start;
+__DATA__
 
+@@ index.html.ep
+<html>
+<head>
+  <title><%= blagconf->title %></title>
+  <link rel="stylesheet"  href="/style.css"
+       type="text/css" 
+       media="screen" 
+       title="Style Sheet"
+  />
+</head>
 
+<body>
+
+<h2><img src="http://www.gravatar.com/avatar/8c9c565991f088ac5b0886ef08712e5f.png" /><%= blagconf->title %></h2>
+
+<p><h4><%= blagconf->description %></h4></p>
+
+<div>
+<ul>
+  % for my $post ($postlist->by_date->all) {
+    <li>
+      <b><a href="/post/<%= $post->id %>">
+        <%= $post->topic %>
+      </a></b>
+      <br/>
+      <b><i class="postdate"><%= $post->date %></i></b>
+      <br/>
+      (<i class="postdate">last edit <b><%= $post->last_edit %></b></i>)
+    </li><br/>
+  % }
+</ul>
+</div>
+
+<div id="footer">
+  <p>
+    <i><%= blagconf->author %></i>
+    :: <%== blagconf->contact %>
+    :: <i>
+        <a href="https://github.com/battlemidget/blagger">
+          blagger (patched) <%= blagconf->version %>
+        </a>
+       </i>
+  </p>
+</div>
+
+</body>
+</html>
+
+@@ post.html.ep
+<html>
+<head>
+  <title>blag: <%= $post->topic %></title>
+  <link rel="stylesheet"  href="/style.css"
+       type="text/css"
+       media="screen"
+       title="Style Sheet"
+  />
+</head>
+
+<body>
+
+<h2><%= $post->topic %></h2>
+
+<h3>
+  <i class="postdate">Date: <%= $post->date %></i><br />
+  <i class="categories">Posted under: <%= $post->category %></i>
+  <a href="/" class="align-right">&larr; index</a>
+</h3>
+
+<div>
+
+ <%== $post->html %>
+
+</div>
+<br/>
+<div id="footer">
+ <p>
+   <h2><a href="/" class="align-left">&larr;</a></h2>
+   <b><a href="/" class="align-right">Back to index</a></b>
+ </p>
+</div>
+
+</body>
+</html>
+
+@@ style.css.ep
+body {
+  color: #000000;
+  background-color: white;
+  margin-left: 3%;
+  margin-right: 3%; 
+  font-family: 'Ubuntu';
+}
+.container {
+  background-color: #dcdcdc;
+  padding: 1em; 
+  width: 90%
+}
+
+a {
+  color: maroon;
+}
+a:link {
+  text-decoration: none; 
+}
+a:visited {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+a:active {
+  text-decoration: none;
+}
+
+h1        { color: teal; }
+h2        { color: teal; }
+h3        { color: teal; }
+h4        { color: navy; }
+a.header  { color: navy; }
+a.header:hover {
+  color: black;
+  text-decoration: underline;
+}
+
+p {
+  text-indent: -1px;
+  margin-left: 1em;
+  margin-top: 0.50em;
+  margin-bottom: 0.50em;
+}
+.rcs {
+  margin-top: 2em;
+}
+.footer {
+  width: 100%;
+  border-top: 1px solid #000042;
+  margin-top: 2em;
+}
+.footer p {
+  text-indent: 0em;
+  font-size: 75%;
+  clear: none;
+}
+
+i.postdate {
+  color: darkslategray;
+}
+
+i.categories {
+  color: darkslategray;
+}
+
+code {
+  color: #fff;
+  font-size: 90%;
+    font-size: 1em;
+    font-family: 'Ubuntu Mono';
+
+}
+
+ul {
+  list-style-type: circle;
+}
+dt {
+  font-weight: bold;
+  font-size: 110%;
+}
+pre {
+    border: 1px solid #000;
+    background-color: #333;
+}
+.align-right { float:right; margin: 0 0 15px 15px; }
+.align-left { float:left; margin: 0 15px 15px 0; }
+
+@@ about.html.ep
+<html>
+<head>
+  <title>About me</title>
+  <link rel="stylesheet"  href="/style.css"
+       type="text/css"
+       media="screen"
+       title="Style Sheet"
+  />
+</head>
+
+<body>
+
+<h2><%= $post->topic %></h2>
+
+<h3>
+  <i class="postdate">Date: <%= $post->date %></i><br />
+  <i class="categories">Posted under: <%= $post->category %></i>
+  <a href="/" class="align-right">&larr; index</a>
+</h3>
+
+<div>
+
+  <%== $post->html %>
+
+</div>
+<br/>
+<div id="footer">
+ <p>
+   <h2><a href="/" class="align-left">&larr;</a></h2>
+   <b><a href="/" class="align-right">Back to index</a></b>
+ </p>
+</div>
+
+</body>
+</html>
+
+@@ atom.xml.ep
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[<%= blagconf->title %>]]></title>
+  <link href="<%= url_for %>/atom.xml" rel="self"/>
+  <link href="<%= url_for %>/"/>
+  <updated><%= localtime %></updated>
+  <id><%= url_for %>/</id>
+  <author>
+    <name><![CDATA[<%= blagconf->author %>]]></name>
+    <% if (blagconf->contact) { %><email><![CDATA[<%= blagconf->contact %>]]></email><% } %>
+  </author>
+  <generator uri="https://github.com/battlemidget/blagger/">blagger (patched) <%= blagconf->version %></generator>
+
+  % for my $post ($postlist->by_cat->all) {
+  <entry>
+    <title type="html"><![CDATA[<%= $post->topic %>]]></title>
+    <link href="/post/<%= $post->id %>"/>
+    <updated><%= $post->date %></updated>
+    <id><%= url_for %>/<%= $post->id %></id>
+    <content type="html"><![CDATA[<%== $post->html %>]]></content>
+  </entry>
+  % }
+</feed>
