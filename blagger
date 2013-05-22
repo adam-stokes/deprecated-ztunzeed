@@ -316,7 +316,7 @@ use Path::Tiny;
 use DateTime;
 
 has description => "Blag about stuff.\n";
-has datetime => sub { DateTime->now };
+has datetime => sub { my $self=shift; DateTime->now->set_time_zone($self->app->config->{blagcfg}->{tz}) };
 
 sub run {
     my ($self, $post) = @_;
@@ -343,7 +343,7 @@ sub run {
     print "Topic: ";
     my $topic = <STDIN>;
     chomp $topic;
-    my $date = $self->datetime;
+    my $date = $self->datetime->strftime("%Y-%m-%d %H:%M:%S");
     print "Categories: ";
     my $category = <STDIN>;
     chomp $category;
@@ -384,7 +384,7 @@ use Path::Tiny;
 use DateTime;
 
 has description => "Edit pending blags.\n";
-has datetime => sub { DateTime->now };
+has datetime => sub { my $self = shift; DateTime->now->set_time_zone($self->app->config->{blagcfg}->{tz}) };
 
 sub run {
     my ($self, $post) = @_;
@@ -768,6 +768,8 @@ pre {
 </html>
 
 @@ atom.xml.ep
+% use DateTime::Format::RSS;
+% my $fmt = DateTime::Format::RSS->new;
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
@@ -775,7 +777,7 @@ pre {
   <link href="<%= url_for %>/atom.xml" rel="self"/>
   <link href="<%= url_for %>/"/>
   <updated><%= localtime %></updated>
-  <id><%= url_for %>/</id>
+  <id><%= time.rand() %></id>
   <author>
     <name><![CDATA[<%= blagconf->author %>]]></name>
     <% if (blagconf->contact) { %><email><![CDATA[<%= blagconf->contact %>]]></email><% } %>
@@ -786,8 +788,8 @@ pre {
   <entry>
     <title type="html"><![CDATA[<%= $post->topic %>]]></title>
     <link href="/post/<%= $post->id %>"/>
-    <updated><%= $post->date %></updated>
-    <id><%= url_for %>/<%= $post->id %></id>
+    <updated><%= $fmt->parse_datetime($post->date) %></updated>
+    <id><%= time.rand() %>.<%= $post->id %></id>
     <content type="html"><![CDATA[<%== $post->html %>]]></content>
   </entry>
   % }
