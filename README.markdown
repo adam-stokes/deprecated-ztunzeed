@@ -11,6 +11,8 @@ I like [perlbrew](http://perlbrew.pl) and so should you :)
 
 ### deploy
 
+    $ export BLAGGER_USER=username
+    $ export BLAGGER_SERVER=example.com
     $ rex deploy
 
 ### running webserver (development)
