@@ -313,9 +313,10 @@ use feature 'say';
 use FindBin '$Bin';
 use Mojo::Base 'Mojolicious::Command';
 use Path::Tiny;
-use POSIX ();
+use DateTime;
 
 has description => "Blag about stuff.\n";
+has datetime => sub { DateTime->now };
 
 sub run {
     my ($self, $post) = @_;
@@ -336,13 +337,13 @@ sub run {
     die "Post exists at $file, maybe you wanted 'reblag'?\n"
       if $file->exists;
 
-    my $dest = $postdir->child(POSIX::strftime("%Y-%m-%d", localtime) . '-' .$post . ".markdown");
+    my $dest = $postdir->child($self->datetime->strftime("%Y-%m-%d") . '-' .$post . ".markdown");
     die "Post already published at $dest\n" if $dest->exists;
 
     print "Topic: ";
     my $topic = <STDIN>;
     chomp $topic;
-    my $date = POSIX::strftime("%Y-%m-%d %H:%M:%S", localtime);
+    my $date = $self->datetime;
     print "Categories: ";
     my $category = <STDIN>;
     chomp $category;
@@ -380,9 +381,10 @@ use feature 'say';
 use FindBin '$Bin';
 use Mojo::Base 'Mojolicious::Command';
 use Path::Tiny;
-use POSIX ();
+use DateTime;
 
 has description => "Edit pending blags.\n";
+has datetime => sub { DateTime->now };
 
 sub run {
     my ($self, $post) = @_;
@@ -433,7 +435,7 @@ sub run {
         my @lines = $file->lines_utf8;
         for (@lines) {
             if (index($_, 'Date: ') == 0) {
-                my $date = POSIX::strftime("%Y-%m-%d %H:%M:%S", localtime);
+                my $date = $self->datetime;
                 $_ = "Date: $date\n";
                 last;
             }
