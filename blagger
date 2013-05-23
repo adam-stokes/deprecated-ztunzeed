@@ -771,10 +771,10 @@ pre {
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[<%= blagconf->title %>]]></title>
-  <link href="<%= url_for %>/atom.xml" rel="self"/>
+  <link href="<%= url_for %>" rel="self"/>
   <link href="<%= url_for %>/"/>
   <updated><%= localtime %></updated>
-  <id><%= time.rand() %></id>
+  <id><%= <%= url_for %></id>
   <author>
     <name><![CDATA[<%= blagconf->author %>]]></name>
     <% if (blagconf->contact) { %><email><![CDATA[<%= blagconf->contact %>]]></email><% } %>
@@ -786,7 +786,7 @@ pre {
     <title type="html"><![CDATA[<%= $post->topic %>]]></title>
     <link href="/post/<%= $post->id %>"/>
     <updated><%= $fmt->parse_datetime($post->date) %></updated>
-    <id><%= $post->id %></id>
+    <id><%= url_for %>/<%= $post->id %></id>
     <content type="html"><![CDATA[<%== $post->html %>]]></content>
   </entry>
   % }
