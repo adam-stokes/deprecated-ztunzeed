@@ -346,7 +346,7 @@ sub run {
     print "Topic: ";
     my $topic = <STDIN>;
     chomp $topic;
-    my $date = $self->datetime->datetime().$self->datetime->time_zone();;
+    my $date = $self->datetime->datetime().'Z';
     print "Categories: ";
     my $category = <STDIN>;
     chomp $category;
@@ -575,18 +575,16 @@ __DATA__
 <p><h4><%= blagconf->description %></h4></p>
 
 <div>
-<ul>
+  <ul>
   % for my $post ($postlist->by_date->all) {
   % my $dt = $fmt->parse_datetime($post->date);
-    <li>
+  <li>
+      <b><i class="postdate"><%= $dt->strftime("%Y-%m-%d") %></i></b>
+
       <b><a href="/post/<%= $post->id %>">
         <%= $post->topic %>
       </a></b>
-      <br/>
-      <b><i class="postdate"><%= $dt->strftime("%Y-%m-%d") %></i></b>
-      <br/>
-      (<i class="postdate">last edit <b><%= $post->last_edit %></b></i>)
-    </li><br/>
+      </li>
   % }
 </ul>
 </div>
@@ -722,11 +720,10 @@ code {
   font-size: 90%;
     font-size: 1em;
     font-family: 'Ubuntu Mono';
-
 }
 
 ul {
-  list-style-type: circle;
+  list-style-type: none;
 }
 dt {
   font-weight: bold;
@@ -738,6 +735,12 @@ pre {
 }
 .align-right { float:right; margin: 0 0 15px 15px; }
 .align-left { float:left; margin: 0 15px 15px 0; }
+
+.post-content {
+  columns: 250px 3;
+  -webkit-columns:250px 3; /* Safari and Chrome */
+  -moz-columns:350px 3; /* Firefox */
+}
 
 @@ about.html.ep
 <html>

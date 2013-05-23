@@ -11,6 +11,7 @@ task "deploy",
   group => "webserver",
   sub {
     perlbrew -use => "perl-5.16.3";
+    say run "cpanm --notest --installdeps .";
     say run "cd /home/$ENV{BLAGGER_USER}/blagger && git pull -q";
     say run "ubic restart stokesblog";
   };
