@@ -346,7 +346,7 @@ sub run {
     print "Topic: ";
     my $topic = <STDIN>;
     chomp $topic;
-    my $date = $self->datetime->datetime().$self->datetime->offset();;
+    my $date = $self->datetime->datetime().$self->datetime->time_zone();;
     print "Categories: ";
     my $category = <STDIN>;
     chomp $category;
@@ -438,7 +438,7 @@ sub run {
         my @lines = $file->lines_utf8;
         for (@lines) {
             if (index($_, 'Date: ') == 0) {
-                my $date = $self->datetime->datetime().$self->datetime->offset();
+                my $date = $self->datetime->datetime().'Z';
                 $_ = "Date: $date\n";
                 last;
             }
@@ -776,7 +776,7 @@ pre {
   <title><![CDATA[<%= blagconf->title %>]]></title>
   <link href="<%= blagconf->site %><%= url_for %>" rel="self"/>
   <link href="<%= blagconf->site %>/"/>
-  <updated><%= $lt->datetime() %><%= $lt->offset %></updated>
+  <updated><%= $lt->datetime() %>Z</updated>
   <id><%= blagconf->site %>/</id>
   <author>
     <name><![CDATA[<%= blagconf->author %>]]></name>
