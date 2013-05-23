@@ -152,7 +152,6 @@ sub _parseblag {
     my $date = substr($dateline, 6, -1);
     warn "Blag post at @{[$path->absolute]} is missing a Date:\n"
       unless $date;
-    say $date;
 
     my $category = substr($categoryline, 10);
     warn "Blag post at @{[$path->absolute]} is missage a Category:\n"
@@ -347,7 +346,7 @@ sub run {
     print "Topic: ";
     my $topic = <STDIN>;
     chomp $topic;
-    my $date = $self->datetime->strftime("%Y-%m-%d %H:%M:%S");
+    my $date = $self->datetime->datetime();
     print "Categories: ";
     my $category = <STDIN>;
     chomp $category;
@@ -439,7 +438,7 @@ sub run {
         my @lines = $file->lines_utf8;
         for (@lines) {
             if (index($_, 'Date: ') == 0) {
-                my $date = $self->datetime;
+                my $date = $self->datetime->datetime();
                 $_ = "Date: $date\n";
                 last;
             }
