@@ -12,7 +12,7 @@ minimal dependencies and could be extended easily. I attempted to
 write my own with using a cpan package called fatpacker. The idea
 behind it is cool, however, I couldn't get it to fully work with the
 modules I needed. I scratched that project the first day and just
-happened to stumble across [^1]blagger. It is relatively new and
+happened to stumble across [blagger][]. It is relatively new and
 doesn't have a lot of features (which I believe was the authors
 point).
 
@@ -22,8 +22,8 @@ framework which allowed me to put all code and templates within the
 blagger file. The code itself is well written and allowed me to get up
 to speed on the design quickly.
 
-I've converted my current blog to [^2]blagger with my own
-modifications. Some additional features include:
+I've converted my current blog to [blagger with my own
+modifications][]. Some additional features include:
 
 * Categories
 * RSS Feeds for /*/:category/atom.xml and the root path for all
@@ -36,12 +36,12 @@ modifications. Some additional features include:
 Some things I plan on adding
 
 * gist support
-* static pages
+* syntax highlighter
 
 I don't plan on adding much more than the bare minimum for someone who
 writes about coding projects and an occasional rant. Patches are
 definately welcomed.
 
-[^1]: https://github.com/avenj/blagger
+[blagger]: https://github.com/avenj/blagger
 
-[^2]: https://github.com/battlemidget/blagger
+[blagger with my own modifications]: https://github.com/battlemidget/blagger
