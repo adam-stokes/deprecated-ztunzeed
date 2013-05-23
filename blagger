@@ -768,8 +768,6 @@ pre {
 </html>
 
 @@ atom.xml.ep
-% use DateTime::Format::RFC3339;
-% my $fmt = DateTime::Format::RFC3339->new();
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
@@ -785,11 +783,10 @@ pre {
   <generator uri="https://github.com/battlemidget/blagger/">blagger (patched) <%= blagconf->version %></generator>
 
   % for my $post ($postlist->all) {
-    % my $dt = $fmt->parse_datetime($post->date);
   <entry>
     <title type="html"><![CDATA[<%= $post->topic %>]]></title>
     <link href="<%= blagconf->site %>/post/<%= $post->id %>"/>
-    <updated><%= $dt %></updated>
+    <updated><%= $post->date %></updated>
     <id><%= blagconf->site %>/<%= $post->id %></id>
     <content type="html"><![CDATA[<%== $post->html %>]]></content>
   </entry>
