@@ -768,13 +768,15 @@ pre {
 </html>
 
 @@ atom.xml.ep
+% use DateTime;
+% my $lt = DateTime->now;
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[<%= blagconf->title %>]]></title>
   <link href="<%= blagconf->site %><%= url_for %>" rel="self"/>
   <link href="<%= blagconf->site %>/"/>
-  <updated><%= localtime %></updated>
+  <updated><%= $lt->datetime() %></updated>
   <id><%= blagconf->site %>/</id>
   <author>
     <name><![CDATA[<%= blagconf->author %>]]></name>
