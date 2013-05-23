@@ -1,5 +1,5 @@
 Topic: Building The Mana World on AMD64 in Ubuntu
-Date: 2006-07-29
+Date: 2006-07-29T15:00:00Z
 Category: ubuntu
 
 **NB**. Ubuntu Precise, Quantal, Raring users may install Manaworld
