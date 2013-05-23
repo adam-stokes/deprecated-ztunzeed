@@ -485,17 +485,14 @@ get '/' => sub {
 };
 
 # planet.ubuntu.com
-# get '/*/:category/atom.xml' => sub {
-#     my $self = shift;
-
-#     my $category = $self->param('category');
-#     my $_posts = $postlist->scan;
-
-#     $self->stash(postlist => $_posts->by_cat($category));
-
-#     my $tmpl = 'atom';
-#     $self->render(template=> $tmpl, format => 'xml');
-# };
+get '/feeds/:category/atom.xml' => sub {
+    my $self     = shift;
+    my $category = $self->param('category');
+    my $_posts   = $postlist->scan;
+    $self->stash(postlist => $_posts->by_cat($category));
+    my $tmpl = 'atom';
+    $self->render(template => $tmpl, format => 'xml');
+};
 
 # atom.xml
 get '/atom.xml' => sub {
