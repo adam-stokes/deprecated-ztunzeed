@@ -1,5 +1,5 @@
 Topic: x230T, realtek wifi, and my solution
-Date: 2013-03-22T15:00-14400
+Date: 2013-03-22T15:00Z
 Category: ubuntu, lenovo
 
 ## Recap

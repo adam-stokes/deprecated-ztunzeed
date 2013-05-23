@@ -1,5 +1,5 @@
 Topic: blagger - perl blogging software
-Date: 2013-05-21T02:13:41-14400
+Date: 2013-05-21T02:13:41Z
 Category: perl, blog 
 
 I was using octopress for awhile but I still have mixed feelings about

@@ -1,5 +1,5 @@
 Topic: python-salesforce on pypi
-Date: 2013-05-20T23:04:34-14400
+Date: 2013-05-20T23:04:34Z
 Category: ubuntu, python, salesforce
 
 I've got a project going to utilize Salesforce.com api over json and oauth
