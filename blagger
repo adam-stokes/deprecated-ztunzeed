@@ -789,7 +789,7 @@ pre {
     <title type="html"><![CDATA[<%= $post->topic %>]]></title>
     <link href="/post/<%= $post->id %>"/>
     <updated><%= $fmt->parse_datetime($post->date) %></updated>
-    <id><%= time.rand() %>.<%= $post->id %></id>
+    <id><%= $post->id %></id>
     <content type="html"><![CDATA[<%== $post->html %>]]></content>
   </entry>
   % }
