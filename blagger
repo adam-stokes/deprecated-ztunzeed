@@ -149,9 +149,10 @@ sub _parseblag {
     warn "Blag post at @{[$path->absolute]} is missing a Topic:\n"
       unless $topic;
 
-    my $date = substr($dateline, 6);
+    my $date = substr($dateline, 6, -1);
     warn "Blag post at @{[$path->absolute]} is missing a Date:\n"
       unless $date;
+    say $date;
 
     my $category = substr($categoryline, 10);
     warn "Blag post at @{[$path->absolute]} is missage a Category:\n"
