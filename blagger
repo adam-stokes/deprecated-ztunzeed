@@ -768,8 +768,8 @@ pre {
 </html>
 
 @@ atom.xml.ep
-% use DateTime::Format:RFC3339;
-% my $fmt = DateTime::Format:RFC3339->new();
+% use DateTime::Format::RFC3339;
+% my $fmt = DateTime::Format::RFC3339->new();
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
@@ -789,7 +789,7 @@ pre {
   <entry>
     <title type="html"><![CDATA[<%= $post->topic %>]]></title>
     <link href="<%= blagconf->site %>/post/<%= $post->id %>"/>
-    <updated><%= $fmt->format_datetime($dt) %></updated>
+    <updated><%= $dt %></updated>
     <id><%= blagconf->site %>/<%= $post->id %></id>
     <content type="html"><![CDATA[<%== $post->html %>]]></content>
   </entry>
