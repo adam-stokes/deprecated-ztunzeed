@@ -26,6 +26,9 @@ Install cpanm
 
 ### Checkout source locally and on remote server
 
+It is best to fork the code into your github account since you'll be
+storing your own posts. This is for demonstration only.
+
     git clone git://github.com/battlemidget/blagger.git
 
 ### Install dependencies locally and on remote server
@@ -76,8 +79,9 @@ Start the service monitor
     git commit -asm 'new blog post' && git push -q
     rex deploy
 
-This will deploy and checkout your source remotely and restart the gaurdian service for the blog.
+This will deploy and checkout your source remotely via [Rex][] and restart the gaurdian service for the blog.
 
 Once you've done the first deployment any future posts only require you to commit to git and deploy.
 
 [Ubic]: https://metacpan.org/release/Ubic
+[Rex]: http://rexify.org
