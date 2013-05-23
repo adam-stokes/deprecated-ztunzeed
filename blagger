@@ -556,6 +556,8 @@ app->start;
 __DATA__
 
 @@ index.html.ep
+% use DateTime::Format::ISO8601;
+% my $fmt = DateTime::Format::ISO8601->new();
 <html>
 <head>
   <title><%= blagconf->title %></title>
@@ -575,12 +577,13 @@ __DATA__
 <div>
 <ul>
   % for my $post ($postlist->by_date->all) {
+  % my $dt = $fmt->parse_datetime($post->date);
     <li>
       <b><a href="/post/<%= $post->id %>">
         <%= $post->topic %>
       </a></b>
       <br/>
-      <b><i class="postdate"><%= $post->date %></i></b>
+      <b><i class="postdate"><%= $dt->strftime("%Y-%m-%d") %></i></b>
       <br/>
       (<i class="postdate">last edit <b><%= $post->last_edit %></b></i>)
     </li><br/>
@@ -590,13 +593,15 @@ __DATA__
 
 <div id="footer">
   <p>
-    <i><%= blagconf->author %></i>
+  <a href="/atom.xml"><img src="/rss.png" /></a>
+  <i><%= blagconf->author %></i>
     :: <%== blagconf->contact %>
-    :: <i>
+    <br /> <i>
         <a href="https://github.com/battlemidget/blagger">
           blagger (patched) <%= blagconf->version %>
         </a>
        </i>
+ 
   </p>
 </div>
 
@@ -604,6 +609,8 @@ __DATA__
 </html>
 
 @@ post.html.ep
+% use DateTime::Format::ISO8601;
+% my $fmt = DateTime::Format::ISO8601->new();
 <html>
 <head>
   <title>blag: <%= $post->topic %></title>
@@ -619,7 +626,8 @@ __DATA__
 <h2><%= $post->topic %></h2>
 
 <h3>
-  <i class="postdate">Date: <%= $post->date %></i><br />
+  % my $dt = $fmt->parse_datetime($post->date);
+  <i class="postdate"><%= $dt->strftime("%Y-%m-%d") %></i><br />
   <i class="categories">Posted under: <%= $post->category %></i>
   <a href="/" class="align-right">&larr; index</a>
 </h3>
@@ -706,6 +714,7 @@ i.postdate {
 
 i.categories {
   color: darkslategray;
+    font-size: .85em;
 }
 
 code {
@@ -793,3 +802,22 @@ pre {
   </entry>
   % }
 </feed>
+
+@@ rss.png (base64)
+iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A
+/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB90FFxIJLnXshJ8AAANBSURBVDjL
+jZNLaFxlFMd/57v3zit3kjh28iSxUmsTqBTTB0UEhRafG0Fx0b0Lu21x2+JGl66kYjaKCzeu3ImL
+CsFIdCG1ik1LSl4TkmknM5lH7p37fd9xMd3Vimfz58DhB+f8z1/0k4U5qtWvyedmAeX/lhhQBTFe
+G40boouvrejk1FnxFtQPBiRAAfkvkIkGOjQG7V1CDaNZ6afY8TO4eBrT2ca01jC2h/oMUX0C1A5E
+6+D6hHgUa3GVk/SPXkRthvcWadcIGn9TqC0Rtu5BUPi3/cB1AQgFD95Du4Y019FiBVHQUpU0X6E3
+8RL52jLDd79F1D35ZLr45o7G5QlxGfgMJMSNHCUbO0UytkC/PINzjrC1zuidb4jaGyDh4yD/5es7
+lMoT4i14CyYACQBBTUgy/TLN+UtolqL9DtVbn5PrbD0GCq6//exVQePkzIf0zl8hq76ADwqQdAh6
+DaL9exTqf5BUT+HCEr2R54l3VhDbH7jvFZzFaPchNDbQtIvmStjKcTrz79M4/xGtE+9BPyHa+4sj
+Sx/jFdJolK35D6BVQ5o12N+E/W2C6xerV/Eam71Vgs1f0KSLLYySRTG94WNkZojS2o8ErS3y9T9p
+zrxKIgWizi6Fh6vgLHhHcO3C+ACUHhA07pNbu0nh7g/gLMnUAr14hn5pgvL2MmF7l2xkljSeJotG
+GNn4CZxDvGJEPTgHzqOE+ChGkjbDK19Q+fkzxGccTJ6jWzmJOMfo6vcAdCtzuHAYcRacw6hXxHpU
+8rTf+JS9dxapn76MEhLf/o78gzuoCamfeBfShOLmr4RpE69K45kLkKZgPUa8h/4h6YuXsM+9govH
+eXDsLZLKHJIe8vRvi2iQozl+Gs0Pg3OM3r8JIjQnz0GWgvcYvELmBkk2jx7NGLwHnFJcWyLsd0Ed
+rfGzYB2lnd9BDL3yDDgF6zCqCgTkl79Ctm+jYZ6n1pco1W7BI1iutYEGOQ7LM2AdudYOPixigwKE
+Q2At4q8d3+agNyUANsXHRzCdOoTFQeRV0VwJDSLEpkiWoGKgUEYBc3igioqRUuGGqKLOg0SYThMk
+hzoH1qHOI4dtTLuBJN1Bby3SbmDaDdRaoZhv/QMeA7Nh8+EDsAAAAABJRU5ErkJggg==
