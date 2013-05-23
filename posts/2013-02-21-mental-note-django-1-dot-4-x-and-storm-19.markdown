@@ -1,5 +1,5 @@
 Topic: Mental Note: Django 1.4.x and Storm .19
-Date: 2013-02-21T15:00
+Date: 2013-02-21T15:00:00Z
 Category: django, python
 
 Some notes on getting Storm used as a database backend for Django. Props to James Henstridge for doing the heavy lifting.

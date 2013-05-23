@@ -1,5 +1,5 @@
 Topic: "Multiline sql statements in clojure"
-Date: 2012-12-04
+Date: 2012-12-04T15:00:00Z
 Category: clojure
 
 ***NB*** Most of these articles are geared towards those are who not

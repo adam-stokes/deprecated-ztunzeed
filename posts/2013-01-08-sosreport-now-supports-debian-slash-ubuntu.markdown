@@ -1,5 +1,5 @@
 Topic: "SOSreport now supports Debian/Ubuntu"
-Date: 2013-01-08
+Date: 2013-01-08T15:00:00Z
 Category: debian, sosreport, ubuntu
 
 Sosreport is a set of tools is designed to provide information to support organizations

@@ -1,5 +1,5 @@
 Topic: "Experimenting with clojure and protocols"
-Date: 2012-12-04
+Date: 2012-12-04T15:00:00Z
 Category: clojure
 
 I started messing around with some clojure code recently to see what I
