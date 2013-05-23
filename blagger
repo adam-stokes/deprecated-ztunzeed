@@ -771,10 +771,10 @@ pre {
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[<%= blagconf->title %>]]></title>
-  <link href="<%= url_for %>" rel="self"/>
-  <link href="<%= url_for %>/"/>
+  <link href="<%= blagconf->site %><%= url_for %>" rel="self"/>
+  <link href="<%= blagconf->site %>/"/>
   <updated><%= localtime %></updated>
-  <id><%= <%= url_for %></id>
+  <id><%= blagconf->site %>/</id>
   <author>
     <name><![CDATA[<%= blagconf->author %>]]></name>
     <% if (blagconf->contact) { %><email><![CDATA[<%= blagconf->contact %>]]></email><% } %>
@@ -784,9 +784,9 @@ pre {
   % for my $post ($postlist->all) {
   <entry>
     <title type="html"><![CDATA[<%= $post->topic %>]]></title>
-    <link href="/post/<%= $post->id %>"/>
+    <link href="<%= blagconf->site %>/post/<%= $post->id %>"/>
     <updated><%= $fmt->parse_datetime($post->date) %></updated>
-    <id><%= url_for %>/<%= $post->id %></id>
+    <id><%= blagconf->site %>/<%= $post->id %></id>
     <content type="html"><![CDATA[<%== $post->html %>]]></content>
   </entry>
   % }
