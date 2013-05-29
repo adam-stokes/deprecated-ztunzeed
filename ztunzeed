@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-package main;  our $VERSION = '0.001007+bm001003';
+package main;  our $VERSION = '0.001009';
 use 5.16.3;
 
 BEGIN {
@@ -323,7 +323,7 @@ has datetime => sub { my $self=shift; DateTime->now->set_time_zone($self->app->c
 
 sub run {
     my ($self, $post) = @_;
-    die "Usage: blagger blag new-blag-entry-id\n" unless $post;
+    die "Usage: ztunzeed blag new-blag-entry-id\n" unless $post;
 
     unless ($post =~ /^[A-Za-z0-9_-]+$/) {
         die "Invalid post name '$post'\n",
@@ -595,8 +595,8 @@ __DATA__
   <i><%= blagconf->author %></i>
     :: <%== blagconf->contact %>
     <br /> <i>
-        <a href="https://github.com/battlemidget/blagger">
-          blagger (patched) <%= blagconf->version %>
+        <a href="https://github.com/battlemidget/ztunzeed">
+          ztunzeed <%= blagconf->version %>
         </a>
        </i>
  
@@ -794,7 +794,7 @@ pre {
     <name><![CDATA[<%= blagconf->author %>]]></name>
     <% if (blagconf->contact) { %><email><![CDATA[<%= blagconf->contact %>]]></email><% } %>
   </author>
-  <generator uri="https://github.com/battlemidget/blagger/">blagger (patched) <%= blagconf->version %></generator>
+  <generator uri="https://github.com/battlemidget/ztunzeed/">ztunzeed <%= blagconf->version %></generator>
   % for my $post ($postlist->all) {
   <entry>
     <title type="html"><![CDATA[<%= $post->topic %>]]></title>

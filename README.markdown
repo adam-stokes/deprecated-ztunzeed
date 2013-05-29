@@ -1,4 +1,4 @@
-# personal blog using blagger
+# ztunzeed
 
 ### recommended perl setup
 
@@ -23,16 +23,14 @@ I like [perlbrew](http://perlbrew.pl) and so should you :)
 
     $ plackup -l /tmp/webserver.sock -R -D -s Starman
 
-## contributor
+## author
 
 [Adam Stokes](mailto:adamjs@cpan.org)
 
-Any additional modifications made to blagger are copyright (c) 2013 Adam Stokes
-and licensed under the same terms as Perl.
+## disclaimer
 
-## author of blagger
-
-Jon Portnoy [avenj at cobaltirc.org](http://www.cobaltirc.org)
+Jon Portnoy [avenj at cobaltirc.org](http://www.cobaltirc.org) is original author of blagger
+in which this code is based heavily off of.
 
 ## license
 
