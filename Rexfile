@@ -1,5 +1,7 @@
 use Rex::Lang::Perl::Perlbrew;
 
+die "No environment set." unless $ENV{BLAGGER_USER};
+
 set perlbrew => root => "/home/$ENV{BLAGGER_USER}/perl5/perlbrew";
 
 user $ENV{BLAGGER_USER};
@@ -11,7 +13,7 @@ task "deploy",
   group => "webserver",
   sub {
     perlbrew -use => "perl-5.16.3";
-    say run "cpanm --notest --installdeps .";
+    say run "cd /home/$ENV{BLAGGER_USER}/ztunzeed && cpanm --notest --installdeps .";
     say run "cd /home/$ENV{BLAGGER_USER}/ztunzeed && git pull -q";
     say run "ubic restart stokesblog";
   };
