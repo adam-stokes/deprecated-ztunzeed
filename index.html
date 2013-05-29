@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Ztunzeed by battlemidget</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/battlemidget/ztunzeed">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/battlemidget/ztunzeed/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/battlemidget/ztunzeed/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Ztunzeed</h1>
+          <p>blog software in perl (fork of blagger with my mods)</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/battlemidget">battlemidget</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h1>
+<a name="ztunzeed" class="anchor" href="#ztunzeed"><span class="octicon octicon-link"></span></a>ztunzeed</h1>
+
+<h3>
+<a name="recommended-perl-setup" class="anchor" href="#recommended-perl-setup"><span class="octicon octicon-link"></span></a>recommended perl setup</h3>
+
+<p>I like <a href="http://perlbrew.pl">perlbrew</a> and so should you :)</p>
+
+<h3>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>installation</h3>
+
+<pre><code>$ git clone git://github.com/battlemidget/blagger.git
+$ cpanm --installdeps .
+</code></pre>
+
+<h3>
+<a name="deploy" class="anchor" href="#deploy"><span class="octicon octicon-link"></span></a>deploy</h3>
+
+<pre><code>$ export BLAGGER_USER=username
+$ export BLAGGER_SERVER=example.com
+$ rex deploy
+</code></pre>
+
+<h3>
+<a name="running-webserver-development" class="anchor" href="#running-webserver-development"><span class="octicon octicon-link"></span></a>running webserver (development)</h3>
+
+<pre><code>$ plackup -R
+</code></pre>
+
+<h3>
+<a name="running-webserver-production" class="anchor" href="#running-webserver-production"><span class="octicon octicon-link"></span></a>running webserver (production)</h3>
+
+<pre><code>$ plackup -l /tmp/webserver.sock -R -D -s Starman
+</code></pre>
+
+<h2>
+<a name="author" class="anchor" href="#author"><span class="octicon octicon-link"></span></a>author</h2>
+
+<p><a href="mailto:adamjs@cpan.org">Adam Stokes</a></p>
+
+<h2>
+<a name="disclaimer" class="anchor" href="#disclaimer"><span class="octicon octicon-link"></span></a>disclaimer</h2>
+
+<p>Jon Portnoy <a href="http://www.cobaltirc.org">avenj at cobaltirc.org</a> is original author of blagger
+in which this code is based heavily off of.</p>
+
+<h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>license</h2>
+
+<p>Licensed under the same terms as Perl.</p>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
