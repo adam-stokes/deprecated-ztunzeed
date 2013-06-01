@@ -72,12 +72,11 @@ reproduce an issue.
 
 [sosreport](https://github.com/sosreport/sosreport)
 
+[Ubuntu PPA for sosreport](https://launchpad.net/~debugmonkeys/+archive/sosreport)
+
 Since working with Canonical I've done a lot of Debian/Ubuntu specific
 work for sosreport in order to have proper packaging and make
-sosreport's gathering routines applicable on those distributions. I've
-got a ppa setup for it:
-
-[Ubuntu PPA for sosreport](https://launchpad.net/~debugmonkeys/+archive/sosreport)
+sosreport's gathering routines applicable on those distributions.
 
 [django-sslserver](https://github.com/teddziuba/django-sslserver/commits?author=battlemidget)
 
@@ -101,6 +100,10 @@ Functional, Acceptance, and Unit test harness for bug resolutions.
 [Kelp::Module::MongoDB](http://kelp.module.mongodb.astokes.org/)
 
 Interface with MongoDB through [Kelp](https://metacpan.org/release/Kelp)
+
+[Mojolicious::Plugin::Blog](https://github.com/battlemidget/Mojolicious-Plugin-Blog)
+
+Blogging plugin for Mojolicious 4.x
 
 [Other CPAN related modules](https://metacpan.org/author/ADAMJS)
 
