@@ -1,5 +1,8 @@
 #!/usr/bin/env perl
-package main;  our $VERSION = '0.001009';
+package main;  
+
+# VERSION
+
 use 5.16.3;
 
 BEGIN {
@@ -24,8 +27,9 @@ BEGIN {
 # UTIL
 ###############################################################################
 package Blag::Util;
-use strict;
-use warnings;
+use strictures 1;
+
+# VERSION
 
 sub sformat {
     my ($class, $string) = splice @_, 0, 2;
@@ -47,8 +51,9 @@ sub sformat {
 # CONFIG
 ###############################################################################
 package Blag::Cfg;
-use strict;
-use warnings;
+
+# VERSION
+
 use Carp 'confess';
 
 sub TITLE ()    {0}
@@ -82,8 +87,10 @@ sub new {
 # POST
 ###############################################################################
 package Blag::Post;
-use strict;
-use warnings;
+
+# VERSION
+
+use strictures 1;
 use Carp 'confess';
 use List::Objects::WithUtils;
 use Path::Tiny ();
@@ -208,7 +215,10 @@ sub from_file {
 # POSTLIST
 ###############################################################################
 package Blag::PostList;
-use strict; use warnings;
+
+# VERSION
+
+use strictures 1;
 use Carp 'confess';
 use List::Objects::WithUtils;
 use Path::Tiny ();
@@ -309,21 +319,25 @@ sub get {
 }
 
 ###############################################################################
-# COMMAND: BLAG
+# COMMAND: Newpost
 ###############################################################################
-package Mojolicious::Command::blag;
-use feature 'say';
+package Mojolicious::Command::newpost;
+
+use strictures 1;
+use v5.16;
 use FindBin '$Bin';
 use Mojo::Base 'Mojolicious::Command';
 use Path::Tiny;
 use DateTime;
 
-has description => "Blag about stuff.\n";
+# VERSION
+
+has description => "Create blog post.\n";
 has datetime => sub { my $self=shift; DateTime->now->set_time_zone($self->app->config->{blagcfg}->{tz}) };
 
 sub run {
     my ($self, $post) = @_;
-    die "Usage: ztunzeed blag new-blag-entry-id\n" unless $post;
+    die "Usage: ztunzeed newpost new-blag-entry-id\n" unless $post;
 
     unless ($post =~ /^[A-Za-z0-9_-]+$/) {
         die "Invalid post name '$post'\n",
@@ -377,10 +391,11 @@ sub run {
 }
 
 ###############################################################################
-# COMMAND: REBLAG
+# COMMAND: REPOST
 ###############################################################################
-package Mojolicious::Command::reblag;
-use feature 'say';
+package Mojolicious::Command::repost;
+use strictures 1;
+use v5.16;
 use FindBin '$Bin';
 use Mojo::Base 'Mojolicious::Command';
 use Path::Tiny;
@@ -455,8 +470,7 @@ sub run {
 # MAIN: FEEL THE <3
 ###############################################################################
 package main;
-use strict;
-use warnings;
+use strictures 1;
 use FindBin '$Bin';
 
 use Mojolicious::Lite;
@@ -487,7 +501,7 @@ get '/' => sub {
     $self->render($tmpl);
 };
 
-# planet.ubuntu.com
+# Category feeds
 get '/feeds/:category/atom.xml' => sub {
     my $self     = shift;
     my $category = $self->param('category');
@@ -824,3 +838,47 @@ eXDsLZLKHJIe8vRvi2iQozl+Gs0Pg3OM3r8JIjQnz0GWgvcYvELmBkk2jx7NGLwHnFJcWyLsd0Ed
 rfGzYB2lnd9BDL3yDDgF6zCqCgTkl79Ctm+jYZ6n1pco1W7BI1iutYEGOQ7LM2AdudYOPixigwKE
 Q2At4q8d3+agNyUANsXHRzCdOoTFQeRV0VwJDSLEpkiWoGKgUEYBc3igioqRUuGGqKLOg0SYThMk
 hzoH1qHOI4dtTLuBJN1Bby3SbmDaDdRaoZhv/QMeA7Nh8+EDsAAAAABJRU5ErkJggg==
+
+__END__
+
+=head1 NAME
+
+ztunzeed - perl blogger
+
+=head1 PREREQS
+
+I like L<http://perlbrew.pl> and so should you :)
+
+=head1 INSTALLATION
+
+    $ git clone git://github.com/battlemidget/ztunzeed.git
+    $ cpanm --installdeps .
+
+=head1 DEPLOY
+
+    $ export BLAGGER_USER=username
+    $ export BLAGGER_SERVER=example.com
+    $ rex deploy
+
+=head1 RUN (Development)
+
+    $ plackup -R
+
+=head1 RUN (Production)
+
+    $ plackup -l /tmp/webserver.sock -R -D -s Starman
+
+=head1 AUTHOR
+
+Adam Stokes <adamjs@cpan.org>
+
+=head1 DISCLAIMER
+
+Jon Portnoy [avenj at cobaltirc.org](http://www.cobaltirc.org) is original author of blagger
+in which this code is based heavily off of.
+
+=head1 LICENSE
+
+Licensed under the same terms as Perl.
+
+=cut

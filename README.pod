@@ -4,7 +4,7 @@ ztunzeed - perl blogger
 
 =head1 PREREQS
 
-I like [perlbrew](http://perlbrew.pl) and so should you :)
+I like L<http://perlbrew.pl> and so should you :)
 
 =head1 INSTALLATION
 
