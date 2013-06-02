@@ -1,37 +1,39 @@
-# ztunzeed
+=head1 NAME
 
-### recommended perl setup
+ztunzeed - perl blogger
+
+=head1 PREREQS
 
 I like [perlbrew](http://perlbrew.pl) and so should you :)
 
-### installation
+=head1 INSTALLATION
 
-    $ git clone git://github.com/battlemidget/blagger.git
+    $ git clone git://github.com/battlemidget/ztunzeed.git
     $ cpanm --installdeps .
 
-### deploy
+=head1 DEPLOY
 
     $ export BLAGGER_USER=username
     $ export BLAGGER_SERVER=example.com
     $ rex deploy
 
-### running webserver (development)
+=head1 RUN (Development)
 
     $ plackup -R
 
-### running webserver (production)
+=head1 RUN (Production)
 
     $ plackup -l /tmp/webserver.sock -R -D -s Starman
 
-## author
+=head1 AUTHOR
 
-[Adam Stokes](mailto:adamjs@cpan.org)
+Adam Stokes <adamjs@cpan.org>
 
-## disclaimer
+=head1 DISCLAIMER
 
 Jon Portnoy [avenj at cobaltirc.org](http://www.cobaltirc.org) is original author of blagger
 in which this code is based heavily off of.
 
-## license
+=head1 LICENSE
 
 Licensed under the same terms as Perl.
