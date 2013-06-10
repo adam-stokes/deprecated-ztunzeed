@@ -472,9 +472,11 @@ sub run {
 package main;
 use strictures 1;
 use FindBin '$Bin';
+use Path::Tiny;
+use File::ShareDir ':ALL';
 
 use Mojolicious::Lite;
-plugin 'Config';
+plugin 'Config' => {file => path(dist_dir('App-ztunzeed'), "ztunzeed.conf")};
 
 my $cfghash = app->config->{blagcfg} || +{};
 
