@@ -9,9 +9,9 @@
 # vim: set ts=3 sw=3 tw=0:
 # vim: set expandtab:
 #
- 
 package Rex::Lang::Perl::Perlbrew;
    
+# VERSION
 use strict;
 use warnings;
 

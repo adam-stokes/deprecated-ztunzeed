@@ -1,0 +1,36 @@
+<html>
+<head>
+  <title>About me</title>
+  <link rel="stylesheet"  href="/style.css"
+       type="text/css"
+       media="screen"
+       title="Style Sheet"
+  />
+</head>
+
+<body>
+
+<h2><%= $post->topic %></h2>
+
+<h3>
+  <i class="postdate">Date: <%= $post->date %></i><br />
+  <i class="categories">Posted under: <%= $post->category %></i>
+  <a href="/" class="align-right">&larr; index</a>
+</h3>
+
+<div>
+
+  <%== $post->html %>
+
+</div>
+<br/>
+<div id="footer">
+ <p>
+   <h2><a href="/" class="align-left">&larr;</a></h2>
+   <b><a href="/" class="align-right">Back to index</a></b>
+ </p>
+</div>
+
+</body>
+</html>
+

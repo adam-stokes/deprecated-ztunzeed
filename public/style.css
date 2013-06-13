@@ -1,0 +1,95 @@
+body {
+  color: #000000;
+  background-color: white;
+  margin-left: 3%;
+  margin-right: 3%; 
+  font-family: 'Ubuntu';
+}
+.container {
+  background-color: #dcdcdc;
+  padding: 1em; 
+  width: 90%
+}
+
+a {
+  color: maroon;
+}
+a:link {
+  text-decoration: none; 
+}
+a:visited {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+a:active {
+  text-decoration: none;
+}
+
+h1        { color: teal; }
+h2        { color: teal; }
+h3        { color: teal; }
+h4        { color: navy; }
+a.header  { color: navy; }
+a.header:hover {
+  color: black;
+  text-decoration: underline;
+}
+
+p {
+  text-indent: -1px;
+  margin-left: 1em;
+  margin-top: 0.50em;
+  margin-bottom: 0.50em;
+}
+.rcs {
+  margin-top: 2em;
+}
+.footer {
+  width: 100%;
+  border-top: 1px solid #000042;
+  margin-top: 2em;
+}
+.footer p {
+  text-indent: 0em;
+  font-size: 75%;
+  clear: none;
+}
+
+i.postdate {
+  color: darkslategray;
+}
+
+i.categories {
+  color: darkslategray;
+    font-size: .85em;
+}
+
+code {
+  color: #fff;
+  font-size: 90%;
+    font-size: 1em;
+    font-family: 'Ubuntu Mono';
+}
+
+ul {
+  list-style-type: none;
+}
+dt {
+  font-weight: bold;
+  font-size: 110%;
+}
+pre {
+    border: 1px solid #000;
+    background-color: #333;
+}
+.align-right { float:right; margin: 0 0 15px 15px; }
+.align-left { float:left; margin: 0 15px 15px 0; }
+
+.post-content {
+  columns: 250px 3;
+  -webkit-columns:250px 3; /* Safari and Chrome */
+  -moz-columns:350px 3; /* Firefox */
+}
+
