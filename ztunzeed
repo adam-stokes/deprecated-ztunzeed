@@ -483,7 +483,7 @@ use Path::Tiny;
 use File::ShareDir ':ALL';
 
 use Mojolicious::Lite;
-plugin 'Config' => {file => path(dist_dir('App-ztunzeed'), "ztunzeed.conf")};
+plugin 'Config' => {file => path($Bin, "ztunzeed.conf")};
 
 my $cfghash = app->config->{blagcfg} || +{};
 
