@@ -18,7 +18,7 @@ task "deploy",
     say "cpan update";
     run
       "cd /home/$ENV{BLAGGER_USER}/ztunzeed && cpanm -q --notest --installdeps .";
-    run "cd /home/$ENV{BLAGGER_USER} && dzil install";
+    run "cd /home/$ENV{BLAGGER_USER}/ztunzeed && dzil install";
     say "Restarting blog";
     run "ubic restart stokesblog";
   };
