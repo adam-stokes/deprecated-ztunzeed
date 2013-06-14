@@ -66,13 +66,6 @@ i.categories {
     font-size: .85em;
 }
 
-code {
-  color: #fff;
-  font-size: 90%;
-    font-size: 1em;
-    font-family: 'Ubuntu Mono';
-}
-
 ul {
   list-style-type: none;
 }
@@ -80,9 +73,10 @@ dt {
   font-weight: bold;
   font-size: 110%;
 }
-pre {
-    border: 1px solid #000;
-    background-color: #333;
+
+pre { 
+    font-size: 1em;
+    font-family: 'Ubuntu Mono';
 }
 .align-right { float:right; margin: 0 0 15px 15px; }
 .align-left { float:left; margin: 0 15px 15px 0; }

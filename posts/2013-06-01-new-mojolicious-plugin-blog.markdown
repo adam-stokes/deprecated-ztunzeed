@@ -13,38 +13,40 @@ can be done in as a little as a few lines.
 
 ### Example ###
 
-      # Set authentication condition
-      my $conditions = {
-        authenticated => sub {
-            my $self = shift;
-            unless ($self->session('authenticated')) {
-                $self->flash(
-                    class   => 'alert alert-info',
-                    message => 'Please log in first!'
-                );
-                $self->redirect_to('/login');
-                return;
-            }
-            return 1;
-        },
-      };
-
-      # Mojolicious full
-      $self->plugin('Blog' => {
-          authCondition => $conditions
-          dsn => "dbi:Pg:dbname=myblog",
-          dbuser => 'zef',
-          dbpass => 'letmein',
-        }
+<pre class="prettyprint">
+# Set authentication condition
+my $conditions = {
+  authenticated => sub {
+    my $self = shift;
+    unless ($self->session('authenticated')) {
+      $self->flash(
+        class   => 'alert alert-info',
+        message => 'Please log in first!'
       );
+      $self->redirect_to('/login');
+      return;
+    }
+    return 1;
+  },
+};
 
-      # Mojolicious::Lite
-      plugin 'Blog' => {
-        authCondition => $conditions,
-        dsn => "dbi:Pg:dbname=myblog",
-        dbuser => 'zef',
-        dbpass => 'letmein',
-      };
+# Mojolicious full
+$self->plugin('Blog' => {
+  authCondition => $conditions
+  dsn => "dbi:Pg:dbname=myblog",
+  dbuser => 'zef',
+  dbpass => 'letmein',
+  }
+);
+
+# Mojolicious::Lite
+plugin 'Blog' => {
+  authCondition => $conditions,
+  dsn => "dbi:Pg:dbname=myblog",
+  dbuser => 'zef',
+  dbpass => 'letmein',
+};
+</pre>
 
 Support for user authentication is handled through an **authCondition** and
 a routing bridge. Community contributions is always welcomed and you can visit
