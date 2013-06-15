@@ -12,8 +12,10 @@ version, to contribute, and for more information, please visit there.
 
 Installing it through Launchpad PPA:
 
+<pre class="prettyprint">
     sudo add-apt-repository ppa:debugmonkeys/sosreport
     sudo apt-get update
     sudo apt-get install sosreport
+</pre>
 
 If you are coming from a Red Hat Enterprise Linux or Fedora background and are familiar with sosreport we'd like to invite you to participate in porting over plugins to work across these distributions as well. Several plugins have been ported over that you can use as a guide for making other plugins distribution aware.

@@ -15,9 +15,11 @@ To remedy this I use a eshell hook to automatically set my environment
 variables while in the shell without messing with anything I may have
 set outside of emacs.
 
+<pre class="prettyprint">
     (add-hook 'eshell-mode-hook
               '(lambda nil
                  (eshell/export "EDITOR=emacsclient -n")
                  (eshell/export "VISUAL=emacsclient -n")))
+</pre>
 
 Pretty straight forward and keeps my eshell editing happy.

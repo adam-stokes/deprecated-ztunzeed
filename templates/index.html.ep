@@ -1,5 +1,6 @@
 % use DateTime::Format::ISO8601;
 % my $fmt = DateTime::Format::ISO8601->new();
+<!DOCTYPE html>
 <html>
 <head>
   <title><%= blagconf->title %></title>
