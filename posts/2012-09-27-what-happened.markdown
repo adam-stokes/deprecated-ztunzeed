@@ -1,4 +1,4 @@
-Topic: "What happened?"
+Topic: What happened?
 Date: 2012-09-27
 Category: general
 

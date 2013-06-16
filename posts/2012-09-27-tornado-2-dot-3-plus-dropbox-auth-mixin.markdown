@@ -1,4 +1,4 @@
-Topic: "Tornado 2.3+ dropbox auth mixin"
+Topic: Tornado 2.3+ dropbox auth mixin
 Date: 2012-09-27
 Category: tornado, python
 

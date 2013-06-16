@@ -1,4 +1,4 @@
-Topic: "Exporting variables for Eshell"
+Topic: Exporting variables for Eshell
 Date: 2012-10-18
 Category: emacs
 

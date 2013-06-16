@@ -1,6 +1,6 @@
-Topic: "broker federation"
+Topic: Setup a broker federation in qpid
 Date: 2010-02-12
-Category: qpid
+Category: qpid, amqp
 
 One of the things with matahari is that we didn’t want our agents to be tied down to just 1 broker. With qpid we can setup broker federation and squash any of the use case scenarios that may involve differences in location, etc.
 
@@ -13,31 +13,35 @@ BrokerC has ip 192.168.1.5 and a port 10001
 
 Startup all three brokers and for the 2 that are on the same machine some options will need to be set
 
-    # BrokerA
-    # qpidd -p 10001 --pid-dir /tmp/brokera --data-dir /tmp/brokera --auth no
-    # BrokerB
-    # qpidd -p 10002 --pid-dir /tmp/brokerb --data-dir /tmp/brokerb --auth no
-    # BrokerC
-    # qpidd -p 10001 --pid-dir /tmp/brokerc --data-dir /tmp/brokerc --auth no
+<pre class="prettyprint">
+# BrokerA
+# qpidd -p 10001 --pid-dir /tmp/brokera --data-dir /tmp/brokera --auth no
+# BrokerB
+# qpidd -p 10002 --pid-dir /tmp/brokerb --data-dir /tmp/brokerb --auth no
+# BrokerC
+# qpidd -p 10001 --pid-dir /tmp/brokerc --data-dir /tmp/brokerc --auth no
+</pre>
 
 Now we need to link all 3 together (federated) into a broker exchange. To do so run the following on any of the machines with brokers to be linked or a machine with no broker at all. The next tools being listed do not require a broker to be running in order to network the brokers together.
 
 qpid-route is the utility being used and for simplicities sake we will be setting up dynamic routes (described in section 1.4.3.2 of the previous link)
 
-    # qpid-route dynamic add 192.168.1.3:10001 192.168.1.3:10002 amq.direct
-    # qpid-route dynamic add 192.168.1.3:10002 192.168.1.3:10001 amq.direct
-    # qpid-route dynamic add 192.168.1.3:10001 192.168.1.5:10001 amq.direct
-    # qpid-route dynamic add 192.168.1.5:10001 192.168.1.3:10001 amq.direct
-    
-    # qpid-route dynamic add 192.168.1.3:10001 192.168.1.3:10002 qmf.default.direct
-    # qpid-route dynamic add 192.168.1.3:10002 192.168.1.3:10001 qmf.default.direct
-    # qpid-route dynamic add 192.168.1.3:10001 192.168.1.5:10001 qmf.default.direct
-    # qpid-route dynamic add 192.168.1.5:10001 192.168.1.3:10001 qmf.default.direct
-    
-    # qpid-route dynamic add 192.168.1.3:10001 192.168.1.3:10002 qmf.default.topic
-    # qpid-route dynamic add 192.168.1.3:10002 192.168.1.3:10001 qmf.default.topic
-    # qpid-route dynamic add 192.168.1.3:10001 192.168.1.5:10001 qmf.default.topic
-    # qpid-route dynamic add 192.168.1.5:10001 192.168.1.3:10001 qmf.default.topic
+<pre class="prettyprint">
+# qpid-route dynamic add 192.168.1.3:10001 192.168.1.3:10002 amq.direct
+# qpid-route dynamic add 192.168.1.3:10002 192.168.1.3:10001 amq.direct
+# qpid-route dynamic add 192.168.1.3:10001 192.168.1.5:10001 amq.direct
+# qpid-route dynamic add 192.168.1.5:10001 192.168.1.3:10001 amq.direct
+
+# qpid-route dynamic add 192.168.1.3:10001 192.168.1.3:10002 qmf.default.direct
+# qpid-route dynamic add 192.168.1.3:10002 192.168.1.3:10001 qmf.default.direct
+# qpid-route dynamic add 192.168.1.3:10001 192.168.1.5:10001 qmf.default.direct
+# qpid-route dynamic add 192.168.1.5:10001 192.168.1.3:10001 qmf.default.direct
+
+# qpid-route dynamic add 192.168.1.3:10001 192.168.1.3:10002 qmf.default.topic
+# qpid-route dynamic add 192.168.1.3:10002 192.168.1.3:10001 qmf.default.topic
+# qpid-route dynamic add 192.168.1.3:10001 192.168.1.5:10001 qmf.default.topic
+# qpid-route dynamic add 192.168.1.5:10001 192.168.1.3:10001 qmf.default.topic
+</pre>
 
 Now I know this looks like a lot of repetition but the above is required since we are creating a bidirectional route. Looking carefully we see that the brokers are being flipped an added to the same exchange.
 
@@ -45,48 +49,55 @@ Speaking of broker exchange you’ll notice amq.direct, qmf.default.direct, qmf.
 
 Moving on we need to do a quick check on the topology which can be accomplished with the following
 
-    # qpid-route route map 192.168.13:10001
-    
-    Finding Linked Brokers:
-       192.168.1.3:10001... Ok
-       192.168.1.5:10001... Ok
-       192.168.1.3:10002... Ok
-    
-    Dynamic Routes:
-    
-     Exchange qmf.default.topic:
-       192.168.1.5:10001 <=> 192.168.1.3:10001
-       192.168.1.3:10002 <=> 192.168.1.3:10001
-    
-     Exchange qmf.default.direct:
-       192.168.1.5:10001 <=> 192.168.1.3:10001
-       192.168.1.3:10002 <=> 192.168.1.3:10001
-    
-     Exchange amq.direct:
-       192.168.1.5:10001 <=> 192.168.1.3:10001
-       192.168.1.3:10002 <=> 192.168.1.3:10001
-    
-    Static Routes:
-     none found
+<pre class="prettyprint">
+# qpid-route route map 192.168.13:10001
+
+Finding Linked Brokers:
+192.168.1.3:10001... Ok
+192.168.1.5:10001... Ok
+192.168.1.3:10002... Ok
+
+Dynamic Routes:
+
+Exchange qmf.default.topic:
+192.168.1.5:10001 <=> 192.168.1.3:10001
+192.168.1.3:10002 <=> 192.168.1.3:10001
+
+Exchange qmf.default.direct:
+192.168.1.5:10001 <=> 192.168.1.3:10001
+192.168.1.3:10002 <=> 192.168.1.3:10001
+
+Exchange amq.direct:
+192.168.1.5:10001 <=> 192.168.1.3:10001
+192.168.1.3:10002 <=> 192.168.1.3:10001
+
+Static Routes:
+none found
+</pre>
 
 The brokers are now federated (networked together) so lets do something useful. We will connect one of matahari’s core agent to any of the brokers on both machines.
 
-    # matahari-hostd --port 10001 --broker 192.168.1.5
-    
-    # matahari-hostd --port 10001 --broker 192.168.1.3
+<pre class="prettyprint">
+# matahari-hostd --port 10001 --broker 192.168.1.5
+
+# matahari-hostd --port 10001 --broker 192.168.1.3
+</pre>
 
 Above we’ve just connected the agent on one machine to the broker on the other and vice versa. So now if we bring up qpid-tool on BrokerB we should see that 2 agents are connected within this broker network and we will be able to interact with those agents no matter where we are.
 
-    # qpid-tool 192.168.1.3:10002
-    
-    qpid: agents
-    Agent Name                                                 Label QMF version
-    1.0 BrokerAgent                                            QMFv2
-    1.redhat.com:matahari:4d3d4442-562a-4514-a639-b366ef17e306 QMFv2 Agent 2
-    1.redhat.com:matahari:fb7584d4-8d10-4cea-ab30-ae4afaea1060 QMFv2 Agent 2
+<pre class="prettyprint">
+# qpid-tool 192.168.1.3:10002
+
+qpid: agents
+Agent Name                                                 Label QMF version
+1.0 BrokerAgent                                            QMFv2
+1.redhat.com:matahari:4d3d4442-562a-4514-a639-b366ef17e306 QMFv2 Agent 2
+1.redhat.com:matahari:fb7584d4-8d10-4cea-ab30-ae4afaea1060 QMFv2 Agent 2
+</pre>
 
 With both agents connected we can access their methods and pull some data from it.
 
+<pre class="prettyprint">
     qpid: list host
     Object Summary:
        ID   Created   Destroyed  Index
@@ -145,6 +156,6 @@ With both agents connected we can access their methods and pull some data from i
        swapFree          4091164
        procTotal         384
        procRunning       4
-
+</pre>
 
 Pretty simple and really cool :D

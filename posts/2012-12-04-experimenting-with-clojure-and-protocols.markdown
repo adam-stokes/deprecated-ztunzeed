@@ -1,6 +1,6 @@
-Topic: "Experimenting with clojure and protocols"
+Topic: Experimenting with clojure and protocols
 Date: 2012-12-04T15:00:00Z
-Category: clojure
+Category: clojure, lisp
 
 I started messing around with some clojure code recently to see what I
 could come up with in a short period of time. My main goal was to

@@ -1,4 +1,4 @@
-Topic: "SOSreport now supports Debian/Ubuntu"
+Topic: SOSreport now supports Debian/Ubuntu
 Date: 2013-01-08T15:00:00Z
 Category: debian, sosreport, ubuntu
 

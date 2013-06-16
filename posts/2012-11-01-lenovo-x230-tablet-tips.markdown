@@ -1,9 +1,10 @@
-Topic: "Lenovo x230 Tablet tips"
+Topic: Lenovo x230 Tablet tips
 Date: 2012-11-01
 Category: lenovo
 
 Some tips for getting around the lack of tablet functionality with Ubuntu Precise and even Quantal. First is a small shell script for disabling finger touch on the tablet when you want to use the stylus for writing/drawing.
 
+<pre class="prettyprint">
     #!/bin/bash
     # This script can be used to toggle enable state of wacom multitouch screen for
     # Thinkpad Tablet Series. You may need to change the name of multitouch device 
@@ -18,6 +19,7 @@ Some tips for getting around the lack of tablet functionality with Ubuntu Precis
         rm $TOGGLE
         xinput set-prop 'Wacom ISDv4 E6 Finger touch' 'Device Enabled' 1
     fi
+</pre>
 
 This allows you to place your hand comfortably down on the tablet while you hand write notes in applications such as Xournal or drawing in applications such as MyPaint.
 

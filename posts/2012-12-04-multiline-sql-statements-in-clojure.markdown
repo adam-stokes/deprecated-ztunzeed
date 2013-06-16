@@ -1,6 +1,6 @@
-Topic: "Multiline sql statements in clojure"
+Topic: Multiline sql statements in clojure
 Date: 2012-12-04T15:00:00Z
-Category: clojure
+Category: clojure, lisp
 
 ***NB*** Most of these articles are geared towards those are who not
 really familiar with Clojure and are just getting started. (like me)
