@@ -35,7 +35,7 @@ It is best to fork the code into your github account since you'll be
 storing your own posts. This is for demonstration only.
 
 <pre class="prettyprint">
-$ git clone git://github.com/battlemidget/blagger.git
+$ git clone git://github.com/battlemidget/ztunzeed.git
 </pre>
 
 ### Install dependencies locally and on remote server
