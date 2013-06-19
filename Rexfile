@@ -15,7 +15,7 @@ task "upgrade",
   sub {
     perlbrew -use => "perl-5.16.3";
     say "Git update";
-    run "cd /home/$ENV{BLAGGER_USER}/ztunzeed && git pull -q";
+    run "cd /home/$ENV{BLAGGER_USER}/ztunzeed && git pull";
     say "cpan update";
     run
       "cd /home/$ENV{BLAGGER_USER}/ztunzeed && cpanm -q --notest --installdeps .";
