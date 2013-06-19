@@ -9,10 +9,11 @@
 </head>
 
 <body>
+%= include "nav"
 
 <h2>About</h2>
 
-<div>
+<div id="container" class="post-item">
 <p><a href="http://coderwall.com/battlemidget"><img src="http://api.coderwall.com/battlemidget/endorsecount.png" alt="endorse" /></a></p>
 <p>Currently, a sustaining engineer for Canonical, Ltd. We maintain current releases of Ubuntu with a heavier focus on LTS releases. A lot of my work tends to go on in the background with fixing bugs, getting new features in, and overall providing a helping hand to the engineering team. It is my goal to be one of the go-to guys when it comes to customer satisfaction with our current supported products. I deal with the engineers in the userspace realm and occasionally dabble in kernel space.</p>
 <p>I enjoy programming in all different languages but I'm well versed in:</p>

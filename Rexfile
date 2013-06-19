@@ -28,6 +28,6 @@ desc "Sync posts";
 task "deploy",
   group => 'webserver',
   sub {
-    sync "posts/*", "/home/$ENV{BLAGGER_USER}/ztunzeed/posts",
+    sync "$ENV{HOME}/posts/*", "/home/$ENV{BLAGGER_USER}/posts",
       {parameters => '--delete',};
   };

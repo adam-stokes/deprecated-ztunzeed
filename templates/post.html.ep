@@ -13,7 +13,7 @@
 </head>
 
 <body>
-
+%= include "nav"
 <h2><%= $post->topic %></h2>
 
 <h3>
@@ -23,12 +23,11 @@
   <a href="/" class="align-right">&larr; index</a>
 </h3>
 
-<div>
+<div id="container" class="post-item">
 
  <%== $post->html %>
-
 </div>
-<br/>
+
 <div id="footer">
  <p>
    <h2><a href="/" class="align-left">&larr;</a></h2>
