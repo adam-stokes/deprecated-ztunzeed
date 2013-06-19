@@ -9,13 +9,11 @@ user $ENV{BLAGGER_USER};
 
 group webserver => $ENV{BLAGGER_SERVER};
 
-desc "Update blagger from git repo";
+desc "Does a full software upgrade and dependency check";
 task "upgrade",
   group => "webserver",
   sub {
     perlbrew -use => "perl-5.16.3";
-    say "Git update";
-    run "cd /home/$ENV{BLAGGER_USER}/ztunzeed && git pull";
     say "cpan update";
     run
       "cd /home/$ENV{BLAGGER_USER}/ztunzeed && cpanm -q --notest --installdeps .";
@@ -23,6 +21,15 @@ task "upgrade",
     say "Restarting blog";
     run "ubic restart stokesblog";
   };
+
+desc "Refresh templates";
+task "refresh",
+  group => "webserver",
+  sub {
+    perlbrew -use => "perl-5.16.3";
+    say "Refreshing templates and software";
+    run "cd /home/$ENV{BLAGGER_USER}/ztunzeed && git pull";
+};
 
 desc "Sync posts";
 task "deploy",
